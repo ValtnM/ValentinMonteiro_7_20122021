@@ -1,8 +1,6 @@
 <template>
   <div>
-      <img class="photo-profil" :src="photo" :alt="`Photo de ${name}`">
-      <h4 class="prenom-profil">{{ firstname }}</h4>
-      
+      <router-link :to="{name: 'account'}"><img class="photo-profil" :src="photo" :alt="`Photo de ${name}`"></router-link>
   </div>
 </template>
 
@@ -18,19 +16,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
  .photo-profil {
-     margin-top: 20px;
      object-fit: cover;
-     height: 100px;
-     width: 100px;
+     width: 100%;
+     height: 100%;
+     clip-path: circle();
      border-radius: 50%;
  }
 
- .prenom-profil {
-     width: 100%;
-     margin: auto;
-     font-size: 1.1em;
-     text-align: center;
- }
 </style>

@@ -44,6 +44,10 @@
     font-family: 'Roboto', sans-serif;
   }
 
+  body {
+    background-color: #f3f3f3!important;
+  }
+
   .navbar img {
     width: 100%;
   }
