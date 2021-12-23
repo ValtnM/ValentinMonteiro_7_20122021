@@ -8,9 +8,10 @@
                 </div>
             </div>
         </div> -->
-        <div class="container-fluid">
+        <div class="container-fluid p-4" >
             <div class="row">          
                 <div class="col-lg-9 post-card">
+                    <new-post></new-post>
                     <post v-for="(post, index) in $store.state.posts" :key="index" :post="post">{{post}}</post>
                 </div>
                 <div class="col-lg-3 user-card">
@@ -26,6 +27,7 @@
 import NavbarUser from '../components/NavbarUser.vue'
 import Member from '../components/Member.vue'
 import Post from '../components/Post.vue'
+import NewPost from '../components/NewPost.vue'
 
 export default {
     name: 'Post',
@@ -37,7 +39,8 @@ export default {
     components: {
         "navbar-user": NavbarUser,
         "member": Member,
-        "post": Post
+        "post": Post,
+        "new-post": NewPost
     }
 }
 </script>

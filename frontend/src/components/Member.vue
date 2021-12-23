@@ -35,7 +35,10 @@ export default {
 <style lang="scss" scoped>
   .card {
     width: 100%;
-    margin: 100px auto 0 auto;    
+    margin: 100px auto 0 auto;   
+    &-title {
+      text-align: center;
+    } 
     
   }
 

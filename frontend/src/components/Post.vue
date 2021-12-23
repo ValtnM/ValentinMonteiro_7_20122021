@@ -3,7 +3,7 @@
       <div class="card-header">
           <bubble class="member-photo"></bubble>
           <div class="post-details">
-            <h2 class="post-author">{{post.user}}</h2>          
+            <h4 class="post-author">{{post.user}}</h4>          
             <p class="post-date">Publiée le {{ post.date }} </p>
           </div>
       </div>
@@ -38,8 +38,8 @@ export default {
 
 <style lang="scss" scoped>
     .card {
-        max-width: 800px!important;
         background: #fff;
+        margin: 50px auto;
         
 
         &-header {

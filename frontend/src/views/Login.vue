@@ -1,10 +1,10 @@
 <template>
     <div>
         <navbar-home></navbar-home>
-        <div class="card">
-            <img class="card-img-top" src="../../public/img/icons/icon.svg" alt="">
+        <div class="card login-card">
+            <img class="card-img-top login-img" src="../../public/img/icons/icon.svg" alt="">
             <div class="card-body p-4">
-                <h2 class="card-title">Connexion</h2>
+                <h2 class="card-title login-title">Connexion</h2>
                 <form>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -26,6 +26,12 @@ import NavbarHome from '../components/NavbarHome.vue'
 
 export default {
     name: 'Login',
+    data() {
+        return {
+            email: '',
+            password: ''
+        }
+    },
     components: {
         'navbar-home': NavbarHome
     }
@@ -33,10 +39,14 @@ export default {
 </script>
 
 <style lang="scss">
-    .card {
-        margin: 50px auto;
-        max-width: 400px;
-        &-img-top{
+    .login {
+    
+        &-card {
+            margin: 50px auto;
+            max-width: 400px;
+        }
+        
+        &-img{
             width: 100%;
         }
 
@@ -45,6 +55,8 @@ export default {
             margin-bottom: 30px!important;
         }
     }
+
+    
 
     form button {
         width: 100%;
