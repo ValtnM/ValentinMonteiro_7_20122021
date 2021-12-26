@@ -3,6 +3,12 @@ const app = express();
 const mysql = require('mysql')
 
 
+const userRoutes = require('./routes/user.js');
+const postRoutes = require('./routes/post.js');
+
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -22,64 +28,71 @@ const db = mysql.createConnection({
     password: ''
 })
 
-db.connect((err) => {
-    if(err) {
-        console.log(err.message);
-    } else {
-        console.log('Connected !');
+// db.connect((err) => {
+//     if(err) {
+//         console.log(err.message);
+//     } else {
+//         console.log('Connected !');
 
-        app.get('/api/user', (req, res, next) => {
-            db.query('SELECT * FROM users', (err, result) => {
-                if (err) {
-                    res.json({error});
-                } else {
-                    res.status(200).json(result)
-                }
-            })
-        });
+//         app.get('/api/user', (req, res, next) => {
+//             db.query('SELECT * FROM users', (err, result) => {
+//                 if (err) {
+//                     res.json({error});
+//                 } else {
+//                     res.status(200).json(result)
+//                 }
+//             })
+//         });
         
-        app.get('/api/user/:id', (req, res, next) => {
-            db.query('SELECT * FROM users WHERE id = ?', [req.params.id], (err, result) => {
-                if (err) {
-                    console.log({ err });
-                } else {
+//         app.get('/api/user/:id', (req, res, next) => {
+//             db.query('SELECT * FROM users WHERE id = ?', [req.params.id], (err, result) => {
+//                 if (err) {
+//                     console.log({ err });
+//                 } else {
 
-                    if (result[0] != undefined) {
-                        res.status(200).json(result)
-                    } else {
-                        res.status(404).json({ err: 'Invalid ID !'})
-                    }
-                }
-            })
-        });
+//                     if (result[0] != undefined) {
+//                         res.status(200).json(result)
+//                     } else {
+//                         res.status(404).json({ err: 'Invalid ID !'})
+//                     }
+//                 }
+//             })
+//         });
 
-        app.post('/api/user', (req, res, next) => {
+//         app.post('/api/user', (req, res, next) => {
             
-            db.query('INSERT INTO users(email, password, firstname, lastname, photo) VALUES (?,?,?,?,?)', [req.body.email, req.body.password, req.body.firstname, req.body.lastname, req.body.photo], (err, result) => {
-                if (err) {
-                    res.status(300).json({ err });
-                } else {
-                    db.query('SELECT * FROM users WHERE email = ?', [req.body.email], (err, result) => {
-                        if(err) {
-                            res.status(404).json({err})
-                        } else {
-                            res.status(201).json({
-                                id: result[0].id,
-                                email: result[0].email,
-                                password: result[0].password,
-                                firstname: result[0].firstname,
-                                lastname: result[0].lastname,
-                                photo: result[0].photo
-                            })                            
-                        }
-                    })
-                }
-            })
-        });
+//             db.query('INSERT INTO users(email, password, firstname, lastname, photo) VALUES (?,?,?,?,?)', [req.body.email, req.body.password, req.body.firstname, req.body.lastname, req.body.photo], (err, result) => {
+//                 if (err) {
+//                     res.status(300).json({ err });
+//                 } else {
+//                     db.query('SELECT * FROM users WHERE email = ?', [req.body.email], (err, result) => {
+//                         if(err) {
+//                             res.status(404).json({err})
+//                         } else {
+//                             res.status(201).json({
+//                                 id: result[0].id,
+//                                 email: result[0].email,
+//                                 password: result[0].password,
+//                                 firstname: result[0].firstname,
+//                                 lastname: result[0].lastname,
+//                                 photo: result[0].photo
+//                             })                            
+//                         }
+//                     })
+//                 }
+//             })
+//         });
         
-        app.listen(3000);
-    }
-})
+//     }
+// })
+
+
+
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
+
+
+app.listen(3000);
 
 
 
