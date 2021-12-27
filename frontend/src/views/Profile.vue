@@ -10,7 +10,7 @@ import NavbarUser from '../components/NavbarUser.vue'
 import Member from '../components/Member.vue'
 
 export default {
-  name: 'Account',
+  name: 'Profile',
   components: {
     'navbar-user': NavbarUser,
     'member': Member,

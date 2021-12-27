@@ -30,7 +30,7 @@ import Post from '../components/Post.vue'
 import NewPost from '../components/NewPost.vue'
 
 export default {
-    name: 'Post',
+    name: 'PostList',
     data(){
         return {
                 

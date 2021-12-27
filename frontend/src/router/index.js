@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import PostList from '../views/PostList.vue'
-import Account from '../views/Account.vue'
+import Profile from '../views/Profile.vue'
 
 Vue.use(VueRouter)
 
@@ -25,14 +25,14 @@ const routes = [
     component: Signup
   },
   {
-  path:'/post-list',
-    name: 'post-list',
+  path:'/posts',
+    name: 'posts',
     component: PostList
   },
   {
-  path:'/account',
-    name: 'account',
-    component: Account
+  path:'/profile/:id',
+    name: 'profile',
+    component: Profile
   },
 
 ]

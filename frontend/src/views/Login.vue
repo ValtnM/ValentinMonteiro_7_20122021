@@ -8,20 +8,25 @@
                 <form>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input class="form-control" type="text" id="email" placeholder="Entrez votre email...">
+                        <input class="form-control" type="text" id="email" placeholder="Entrez votre email..." v-model="email">
                     </div>
                     <div class="form-group my-3">
                         <label for="password">Mot de passe</label>
-                        <input class="form-control" type="text" id="password" placeholder="Entrez votre mot de passe...">
+                        <input class="form-control" type="password" id="password" placeholder="Entrez votre mot de passe..." v-model="password">
                     </div>
-                    <button class="btn btn-success my-3">Se connecter</button>
+                    <button class="btn btn-success my-3" @click.prevent="login">Se connecter</button>
                 </form>
+                <div class="alert alert-danger" v-if="loginFailure">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Email ou mot de passe incorrect
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 import NavbarHome from '../components/NavbarHome.vue'
 
 export default {
@@ -29,11 +34,35 @@ export default {
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            loginFailure: false
         }
     },
     components: {
         'navbar-home': NavbarHome
+    },
+    methods: {
+        login(){
+            axios.post('http://localhost:3000/api/users/login', {
+                email: this.email,
+                password: this.password
+            }) 
+                .then((res) => {
+                    this.$store.state.userId = res.data.userId;
+                    localStorage.setItem('userId', res.data.userId);
+                    localStorage.setItem('token', res.data.token);
+                    this.$router.push('/posts')
+                })
+                .catch((err) => {
+                    console.log("erreur : " + err);
+                    this.loginFailure = true;
+                })
+            // this.$store.dispatch('login', {
+            //     email: this.email,
+            //     password: this.password
+            // }).then((res) => console.log(res))
+            // .catch(() => console.log('NUL!'))
+        }
     }
 }
 </script>

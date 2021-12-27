@@ -9,7 +9,7 @@ const passwordRegex = /^(?=.*\d).{4,8}$/;
 
 
 exports.signup = (req, res, next) => {
-
+    console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
     const firstname = req.body.firstname;
@@ -94,17 +94,22 @@ exports.login = (req, res, next) => {
 
     const email = req.body.email;
     const password = req.body.password;
+    console.log(req.body);
 
     if(email == null || password == null) {
         return res.status(400).json({ error: 'Paramètre manquant !' });
     }
 
 
-    models.User.findOne({email: email})
+    models.User.findOne({
+        where: { email: email }
+        })
         .then(user => {
             if(!user) {
                 return res.status(401).json({ message: 'Utilisateur non trouvé !'})
             }
+            console.log(user.email);
+            console.log(user.password);
             bcrypt.compare(password, user.password)
                 .then(valid => {
                     if(!valid) {
@@ -127,6 +132,7 @@ exports.login = (req, res, next) => {
 
 
 exports.getOneUser = (req, res, next) => {
+   
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
     if(userId < 0) {
