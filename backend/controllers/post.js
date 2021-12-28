@@ -13,12 +13,16 @@ exports.createPost = (req, res, next) => {
         res.status(400).json({ 'erreur': 'paramètre manquant' });
     };
 
-    if(textContent.length > 150) {
-        res.status(400).json({ 'erreur': 'Texte trop long (150 caractères maximum)' })
+    if(!textContent != null){
+        if(textContent.length > 150) {
+            res.status(400).json({ 'erreur': 'Texte trop long (150 caractères maximum)' })
+        };
     };
 
-    if(imageContent.length > 150) {
-        res.status(400).json({ 'erreur': 'Nom de l\'image invalide' })
+    if(imageContent != null){
+        if(imageContent.length > 150) {
+            res.status(400).json({ 'erreur': 'Nom de l\'image invalide' })
+        };
     };
 
     models.User.findOne({
@@ -45,7 +49,7 @@ exports.createPost = (req, res, next) => {
         };
     })
     .catch(err => {
-        res.status(500).json({ err });
+        res.status(500).json({ 'err': 'ERREUR !!!' });
     });
 };
 

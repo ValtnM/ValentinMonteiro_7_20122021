@@ -42,15 +42,15 @@ export default {
         'navbar-home': NavbarHome
     },
     methods: {
-        login(){
+        login(){            
             axios.post('http://localhost:3000/api/users/login', {
                 email: this.email,
                 password: this.password
             }) 
                 .then((res) => {
                     this.$store.state.userId = res.data.userId;
-                    localStorage.setItem('userId', res.data.userId);
-                    localStorage.setItem('token', res.data.token);
+                    sessionStorage.setItem('userId', res.data.userId);
+                    sessionStorage.setItem('token', res.data.token);
                     this.$router.push('/posts')
                 })
                 .catch((err) => {

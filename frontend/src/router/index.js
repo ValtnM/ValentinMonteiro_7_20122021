@@ -30,7 +30,7 @@ const routes = [
     component: PostList
   },
   {
-  path:'/profile/:id',
+  path:'/profile',
     name: 'profile',
     component: Profile
   },

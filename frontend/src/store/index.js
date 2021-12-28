@@ -47,7 +47,10 @@ export default new Vuex.Store({
     //   },
     // ]
     userId: null,
-    token: null
+    email: null,
+    firstname: null,
+    lastname: null,
+    photo: "https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_960_720.jpg"
   },
   mutations: {
   },
