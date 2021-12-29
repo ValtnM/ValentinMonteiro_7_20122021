@@ -8,9 +8,10 @@
           </div>
       </div>
       <div class="card-body">
-          <h3 class="post-title fs-3">{{ post.title }}</h3>
+          <h3 class="post-title fs-3">{{ post.textContent }}</h3>
       </div>
-      <img :src="post.image">
+      <!-- <img :src="`C:/Users/Valentin/Documents/P7/ValentinMonteiro_7_20122021/frontend/images/${post.imageContent}`"> -->
+      <img src="C:/Users/Valentin/Documents/P7/ValentinMonteiro_7_20122021/frontend/images/beard-ga594d03c0_640.jpg">
       <div class="post-footer">
           <div><i class="fas fa-thumbs-up like"></i></div>
           <div><i class="fas fa-thumbs-down dislike"></i></div>

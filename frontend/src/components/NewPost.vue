@@ -8,7 +8,7 @@
                 <i class="fas fa-exclamation-triangle me-2"></i>
                 Veuillez ajouter un texte ou une image
             </div>
-            <form action="">
+            <form>
                 <div class="form-group">
                     <label class="pe-2">Choisissez un contenu :</label><br>
                     <div class="form-check form-check-inline">
@@ -26,11 +26,11 @@
                 </div>
                 <div class="form-group" v-if="contentType === 'text'">
                     <label for="text">Texte :</label>
-                    <textarea class="form-control" id="text" name="text" placeholder="Saisissez un texte..." v-model="newPost.textContent"></textarea>
+                    <textarea class="form-control" id="text" name="text" placeholder="Saisissez un texte..." v-model="textContent"></textarea>
                 </div>
                 <div class="form-group" v-if="contentType === 'img'">
                     <label for="image">Ajoutez une image :</label><br>
-                    <input type="file" id="image" @change="onFileSelected">
+                    <input type="file" id="image" name="image" @change="onFileSelected">
                 </div>
 
                 <button class="btn btn-primary" @click.prevent="createPost">Publier</button>
@@ -47,41 +47,71 @@ export default {
     name: "NewPost",
     data() {
         return {
-            newPost: {
-                textContent: "",
-                imageContent: ""
-            },
+            // newPost: {
+            //     },
+            textContent: "",
+            imageContent: null,
             contentType: 'text',
             content: true
         }
     },
     methods: {
         onFileSelected(event) {
-            this.newPost.imageContent = event.target.files[0].name
+            // console.log(event.target.files[0]);
+            this.imageContent = event.target.files[0]
         },
         createPost() {    
             const token = sessionStorage.getItem('token');
             this.content = true;     
-            console.log(this.newPost.textContent);
-            console.log(this.newPost);
-            if(this.contentType === "text"){
-                this.newPost.imageContent = "";
-            } else {
-                this.newPost.textContent = "";
-            }
-            if(!this.newPost.textContent && !this.newPost.imageContent) {
+            // if(this.contentType === "text"){
+            //     this.newPost.imageContent = null;
+            // } else {
+            //     this.newPost.textContent = "";
+            // }
+            // if(!this.newPost.textContent && !this.newPost.imageContent) {
+            //     this.content = false;
+            // } else {
+            //     console.log('OK');
+            //     axios.post('http://localhost:3000/api/posts/new', this.newPost, {
+            //         headers: {
+            //             'authorization': `Bearer ${token}`,
+            //             // 'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+            //         .then(res => console.log(res))
+            //         .catch(() => console.log('Ceci est une erreur'))
+            // }
+            console.log(this.contentType);
+            if(!this.textContent && !this.imageContent){
                 this.content = false;
-            } else {
-                console.log('OK');
-                axios.post('http://localhost:3000/api/posts/new', this.newPost, {
+            } else if(this.contentType === "text"){
+                this.imageContent = null
+                const postText = { textContent: this.textContent }
+                axios.post('http://localhost:3000/api/posts/new', postText, {
                     headers: {
-                        'authorization': `Bearer ${token}`
+                        'authorization': `Bearer ${token}`,
+                        // 'Content-Type': 'multipart/form-data'
                     }
                 })
                     .then(res => console.log(res))
                     .catch(() => console.log('Ceci est une erreur'))
-            }
-        }
+            } else if(this.contentType === "img") {
+                this.textContent = "";
+                const fd = new FormData();
+                fd.append('image', this.imageContent, this.imageContent.name)
+                axios.post('http://localhost:3000/api/posts/new', fd, {
+                    headers: {
+                        'authorization': `Bearer ${token}`,
+                        // 'Content-Type': 'multipart/form-data'
+
+                    }
+                })
+                    .then(() => {
+                        console.log('ok')
+                    })
+                    .catch(() => console.log('Ceci est une erreur'))
+            }            
+        }        
     }
 }
 </script>

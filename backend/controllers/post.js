@@ -7,23 +7,32 @@ exports.createPost = (req, res, next) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
     const textContent = req.body.textContent;
-    const imageContent = req.body.imageContent;
+    console.log(req.body.textContent);
+    let imageContent = null;
+
+    // const imageContent = req.body.imageContent;
+    // let imageContent = req.body.imageContent;
+
+    console.log(req.body);
 
     if(textContent == null && imageContent == null) {
         res.status(400).json({ 'erreur': 'paramètre manquant' });
     };
 
-    if(!textContent != null){
+    if(textContent != null){
         if(textContent.length > 150) {
             res.status(400).json({ 'erreur': 'Texte trop long (150 caractères maximum)' })
         };
     };
 
     if(imageContent != null){
+        imageContent = `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`;
         if(imageContent.length > 150) {
             res.status(400).json({ 'erreur': 'Nom de l\'image invalide' })
         };
     };
+
+    console.log(imageContent);
 
     models.User.findOne({
         where: { id: userId }
