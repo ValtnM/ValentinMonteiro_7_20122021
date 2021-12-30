@@ -6,33 +6,29 @@ const models = require('../models');
 exports.createPost = (req, res, next) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
-    const textContent = req.body.textContent;
-    console.log(req.body.textContent);
-    let imageContent = null;
+    const textContent = req.body.textContent;    
+    let imageContent = req.file
 
-    // const imageContent = req.body.imageContent;
-    // let imageContent = req.body.imageContent;
+    console.log(textContent);
+    console.log(imageContent);
 
-    console.log(req.body);
-
-    if(textContent == null && imageContent == null) {
+    if(!textContent && !imageContent) {
         res.status(400).json({ 'erreur': 'paramètre manquant' });
     };
 
-    if(textContent != null){
+    if(textContent){
         if(textContent.length > 150) {
             res.status(400).json({ 'erreur': 'Texte trop long (150 caractères maximum)' })
         };
-    };
-
-    if(imageContent != null){
+    } else {
         imageContent = `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`;
         if(imageContent.length > 150) {
             res.status(400).json({ 'erreur': 'Nom de l\'image invalide' })
         };
-    };
+    }
+    
 
-    console.log(imageContent);
+    console.log("IMAGE : "+imageContent);
 
     models.User.findOne({
         where: { id: userId }
@@ -46,13 +42,8 @@ exports.createPost = (req, res, next) => {
                 dislike: 0,
                 UserId: user.id
             })
-            .then(newPost => {
-                if(newPost){
-                    return res.status(201).json(newPost);
-                } else {
-                    return res.status(500).json({ 'erreur': 'Le message ne peut pas être publié'});
-                };
-            });
+            res.status(201).json({"message": "Nouveau post créé avec succès !"})
+                    
         } else {
             res.status(404).json({'erreur' : 'Utilisateur introuvable'});
         };

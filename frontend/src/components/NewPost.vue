@@ -47,8 +47,6 @@ export default {
     name: "NewPost",
     data() {
         return {
-            // newPost: {
-            //     },
             textContent: "",
             imageContent: null,
             contentType: 'text',
@@ -57,12 +55,11 @@ export default {
     },
     methods: {
         onFileSelected(event) {
-            // console.log(event.target.files[0]);
             this.imageContent = event.target.files[0]
         },
         createPost() {    
             const token = sessionStorage.getItem('token');
-            this.content = true;     
+            this.content = true;    
             // if(this.contentType === "text"){
             //     this.newPost.imageContent = null;
             // } else {
@@ -81,35 +78,41 @@ export default {
             //         .then(res => console.log(res))
             //         .catch(() => console.log('Ceci est une erreur'))
             // }
-            console.log(this.contentType);
+
             if(!this.textContent && !this.imageContent){
                 this.content = false;
             } else if(this.contentType === "text"){
                 this.imageContent = null
-                const postText = { textContent: this.textContent }
-                axios.post('http://localhost:3000/api/posts/new', postText, {
-                    headers: {
-                        'authorization': `Bearer ${token}`,
-                        // 'Content-Type': 'multipart/form-data'
-                    }
-                })
-                    .then(res => console.log(res))
-                    .catch(() => console.log('Ceci est une erreur'))
+                if(!this.textContent){
+                    this.content = false;
+                } else {
+                    const postText = { textContent: this.textContent }
+                    axios.post('http://localhost:3000/api/posts/new', postText, {
+                        headers: {
+                            'authorization': `Bearer ${token}`,
+                        }
+                    })
+                        .then(res => console.log(res))
+                        .catch(() => console.log('Ceci est une erreur'))
+                }
             } else if(this.contentType === "img") {
                 this.textContent = "";
-                const fd = new FormData();
-                fd.append('image', this.imageContent, this.imageContent.name)
-                axios.post('http://localhost:3000/api/posts/new', fd, {
-                    headers: {
-                        'authorization': `Bearer ${token}`,
-                        // 'Content-Type': 'multipart/form-data'
-
-                    }
-                })
-                    .then(() => {
-                        console.log('ok')
+                if (!this.imageContent){
+                    this.content = false;
+                } else {
+                    let formData = new FormData();
+                    formData.append('image', this.imageContent)
+                    axios.post('http://localhost:3000/api/posts/new', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'authorization': `Bearer ${token}`,
+                        }
                     })
-                    .catch(() => console.log('Ceci est une erreur'))
+                        .then(() => {
+                            console.log('ok')
+                        })
+                        .catch((err) => console.log(err))
+                }
             }            
         }        
     }
