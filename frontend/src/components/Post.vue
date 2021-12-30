@@ -1,17 +1,17 @@
 <template>
   <div class="card">
-      <div class="card-header">
-          <bubble class="member-photo"></bubble>
+      <div class="card-header post-header">
+          <bubble class="member-photo" :userId="UserId"></bubble>
           <div class="post-details">
-            <h4 class="post-author">{{post.user}}</h4>          
-            <p class="post-date">Publiée le {{ post.date }} </p>
+            <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>          
+            <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>
           </div>
       </div>
-      <div class="card-body">
-          <h3 class="post-title fs-3">{{ post.textContent }}</h3>
+      <div class="card-body post-body">
+        <h3 class="fs-3" v-if="post.textContent">{{ post.textContent }}</h3>
+        <img :src="post.imageContent" v-if="post.imageContent">
       </div>
       <!-- <img :src="`C:/Users/Valentin/Documents/P7/ValentinMonteiro_7_20122021/frontend/images/${post.imageContent}`"> -->
-      <img src="C:/Users/Valentin/Documents/P7/ValentinMonteiro_7_20122021/frontend/images/beard-ga594d03c0_640.jpg">
       <div class="post-footer">
           <div><i class="fas fa-thumbs-up like"></i></div>
           <div><i class="fas fa-thumbs-down dislike"></i></div>
@@ -33,6 +33,14 @@ export default {
     props: ['post'],
     components: {
         'bubble': Bubble
+    },
+    methods: {
+        getDate(date){
+            const newDate = date.slice(0,-8);
+            const time = newDate.split('T')[1];
+            const day = newDate.split('T')[0].split('-').reverse().join('-');
+            return `${day} à ${time}`
+        }
     }
 }
 </script>
@@ -61,6 +69,10 @@ export default {
         }
 
         .post {
+
+            &-header {
+                background: #FFE9E9;
+            }
             
             &-details {
                 display: flex;
@@ -76,14 +88,23 @@ export default {
                 margin: auto 0;
             }
 
-            &-title {
-                font-size: 2em;
-                margin-left: 30px;
+            &-body {
+                padding: 0;
+
+                h3 {
+                    padding: 20px;
+                }
+
+                img {
+                    width: 100%;
+                }
             }
 
             &-footer {
                 padding: 10px;
                 display: flex;
+                background: #FFE9E9;
+                // border-top: 1px solid rgba(0,0,0,.125);
 
                 i {
                     margin: 0 10px;                

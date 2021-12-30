@@ -1,7 +1,7 @@
 <template>
   <div>
       <router-link :to="{name: 'profile'}"><img class="photo-profil" :src="photo" :alt="`Photo de ${name}`"></router-link>
-      <button class="btn btn-primary">TEST</button>
+      <!-- <button class="btn btn-primary">TEST</button> -->
   </div>
 </template>
 
@@ -16,6 +16,7 @@ export default {
             name: ''          
         }
     },
+    props: ['userId'],
     methods: {
         getUser() {
             axios.get('http://localhost:3000/api/users/profile')

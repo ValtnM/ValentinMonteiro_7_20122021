@@ -130,31 +130,45 @@ exports.login = (req, res, next) => {
         });
 }
 
-
 exports.getOneUser = (req, res, next) => {
-   
-    const headerAuth = req.headers['authorization'];
-    const userId = jwtUtils.getUserId(headerAuth);
-    if(userId < 0) {
-        console.log(`id est égal à : ${userId}`);
-
-        return res.status(400).json({ 'erreur': 'Token incorrect' });
-    }
+    const userId = req.params.id;
     models.User.findOne({
         attributes: [ 'id', 'email', 'firstname', 'lastname', 'photo' ],
         where: { id: userId }
-    })
-        .then((user) => {
-            if(user) {
-                res.status(201).json(user);
-            } else {
-                res.status(404).json({ 'erreur': 'Utilisateur introuvable'})
-            }
-        })
-        .catch((err) => {
-            res.status(500).json({ err })
-        });
-};
+    }).then((user) => {
+        if(user){
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ 'erreur': 'Utilisateur non trouvé !'})
+        }
+    }).catch(err => res.status(500).json({err}))
+}
+
+
+// exports.getOneUser = (req, res, next) => {
+   
+//     const headerAuth = req.headers['authorization'];
+//     const userId = jwtUtils.getUserId(headerAuth);
+//     if(userId < 0) {
+//         console.log(`id est égal à : ${userId}`);
+
+//         return res.status(400).json({ 'erreur': 'Token incorrect' });
+//     }
+//     models.User.findOne({
+//         attributes: [ 'id', 'email', 'firstname', 'lastname', 'photo' ],
+//         where: { id: userId }
+//     })
+//         .then((user) => {
+//             if(user) {
+//                 res.status(201).json(user);
+//             } else {
+//                 res.status(404).json({ 'erreur': 'Utilisateur introuvable'})
+//             }
+//         })
+//         .catch((err) => {
+//             res.status(500).json({ err })
+//         });
+// };
 
 exports.updateUser = (req, res, next) => {
     const headerAuth = req.headers['authorization'];

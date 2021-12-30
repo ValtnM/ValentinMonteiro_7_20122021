@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const mysql = require('mysql')
+const path = require('path');
 
 
 const userRoutes = require('./routes/user.js');
@@ -90,6 +91,10 @@ const db = mysql.createConnection({
 
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
+
+
+// Gestion des requêtes vers la route '/images'
+app.use('/images/posts', express.static(path.join(__dirname, 'images', 'post')));
 
 
 app.listen(3000);

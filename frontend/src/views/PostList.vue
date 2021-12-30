@@ -54,10 +54,18 @@ export default {
                    'authorization': `Bearer ${token}`
                }
            })
-            .then(res => this.posts = res.data)
+            // .then(res => this.posts = res.data)
+            .then((res) => {
+                this.posts = res.data
+                console.log(res.data);
+            })
+                
             .catch(() => console.log('Impossible de récupérer les posts !'))
         },
         
+    },
+    beforeMount(){
+        this.getAllPosts()
     }
 }
 </script>
