@@ -38,6 +38,7 @@ export default {
         return {
             posts: [],
             user: {
+                id: '',
                 email: '',
                 firstname: '',
                 lastname: '',
@@ -52,7 +53,7 @@ export default {
         "new-post": NewPost
     },
     methods: {
-        getAllPosts(){
+        async getAllPosts(){
             const token = sessionStorage.getItem('token')
            axios.get('http://localhost:3000/api/posts', {
                headers: {
@@ -66,7 +67,7 @@ export default {
                 
             .catch(() => console.log('Impossible de récupérer les posts !'))
         },
-        getUser(){
+        async getUser(){
             const userId = sessionStorage.getItem('userId');
             const token = sessionStorage.getItem('token')
             axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
@@ -74,6 +75,7 @@ export default {
                     'authorization': `Bearer ${token}`
                 }
             }).then(res => {
+                this.user.id = res.data.id;
                 this.user.email = res.data.email;
                 this.user.firstname = res.data.firstname;
                 this.user.lastname = res.data.lastname;
@@ -82,7 +84,7 @@ export default {
         }
         
     },
-    async beforeMount(){
+    async created(){
         await this.getAllPosts()
         await this.getUser()
     }

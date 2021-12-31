@@ -2,14 +2,14 @@
   <div>
     <div class="member-card">
       <div class="card">
-        <bubble class="member-photo" :photo="user.photo"></bubble>
+        <bubble class="member-photo" :photo="user.photo" :userId="user.id"></bubble>
         <div class="card-body">
           <h2 class="card-title">{{user.firstname}} {{ user.lastname }}</h2>
           <div class="email">
             <i class="fas fa-at"></i>
             <h3>{{ user.email }}</h3>
           </div>
-          <div class="modify-user">
+          <div class="modify-user" v-if="userId == profileId">
             <button class="btn btn-primary">Modifier le profil</button>
             <button class="btn btn-danger">Supprimer le profil</button>
           </div>
@@ -23,15 +23,25 @@
 import Bubble from '../components/Bubble.vue'
 
 export default {
-  name: 'Account',
+  name: 'Member',
   data(){
     return {
-      
+      userId: '',
+      profileId: ''
     }
   },
   props: ['user'],
   components: {
     'bubble': Bubble,
+  },
+  methods: {
+    getId(){
+      this.userId = sessionStorage.getItem('userId');
+      this.profileId = this.$route.params.id
+    }
+  },
+  created(){
+    this.getId();
   }
 }
 </script>

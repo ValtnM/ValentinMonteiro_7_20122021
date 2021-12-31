@@ -1,19 +1,52 @@
 <template>
   <div>
     <navbar-user></navbar-user>
-    <member></member>
+    <member :user="user"></member>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 import NavbarUser from '../components/NavbarUser.vue'
 import Member from '../components/Member.vue'
 
 export default {
   name: 'Profile',
+  data(){
+    return {
+      user: {
+        id: '',
+        firstname: '',
+        lastname: '',
+        email: '',
+        photo: ''
+      }
+    }
+  },
   components: {
     'navbar-user': NavbarUser,
     'member': Member,
+  },
+  methods: {
+    getUser(){
+      const userId = this.$route.params.id;
+      const token = sessionStorage.getItem('token');
+      axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
+        headers: {
+          'authorization': `Bearer ${token}`
+        }
+      }).then(res => {
+        this.user.id = res.data.id;
+        this.user.firstname = res.data.firstname;
+        this.user.lastname = res.data.lastname;
+        this.user.email = res.data.email;
+        this.user.photo = res.data.photo;
+      }).catch(err => console.log(err))
+    }
+  },
+  created(){
+    this.getUser()
   }
 }
 </script>

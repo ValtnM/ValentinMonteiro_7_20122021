@@ -66,7 +66,7 @@ exports.getAllPost = (req, res, next) => {
         offset: (!isNaN(offset)) ? offset : null,
         include: [{
             model: models.User,
-            attributes: ['firstname', 'lastname', 'photo']
+            attributes: ['id','firstname', 'lastname', 'photo']
         }]
     }).then(posts => {
         if(posts){

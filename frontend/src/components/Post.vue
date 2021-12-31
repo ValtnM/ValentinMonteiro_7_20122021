@@ -1,7 +1,7 @@
 <template>
   <div class="card">
       <div class="card-header post-header">
-          <bubble class="member-photo" :photo="post.User.photo"></bubble>
+          <bubble class="member-photo" :photo="post.User.photo" :userId="post.User.id"></bubble>
           <div class="post-details">
             <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>          
             <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>
@@ -11,7 +11,6 @@
         <h3 class="fs-3" v-if="post.textContent">{{ post.textContent }}</h3>
         <img :src="post.imageContent" v-if="post.imageContent">
       </div>
-      <!-- <img :src="`C:/Users/Valentin/Documents/P7/ValentinMonteiro_7_20122021/frontend/images/${post.imageContent}`"> -->
       <div class="post-footer">
           <div><i class="fas fa-thumbs-up like"></i></div>
           <div><i class="fas fa-thumbs-down dislike"></i></div>
