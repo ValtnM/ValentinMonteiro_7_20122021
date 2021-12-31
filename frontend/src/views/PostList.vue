@@ -12,7 +12,6 @@
             <div class="row">          
                 <div class="col-lg-9 post-card">
                     <new-post></new-post>
-                    <button class="btn btn-primary" @click="getAllPosts">Afficher</button>
                     <post v-for="(post, index) in posts" :key="index" :post="post">{{post}}</post>
                 </div>
                 <div class="col-lg-3 user-card">

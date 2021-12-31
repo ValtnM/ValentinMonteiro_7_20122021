@@ -60,7 +60,7 @@ exports.getAllPost = (req, res, next) => {
     const order = req.query.order;
 
     models.Post.findAll({
-        order: [(order != null) ? order.split(':') : ['textContent', 'ASC']],
+        order: [(order != null) ? order.split(':') : ['id', 'DESC']],
         attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
         limit: (!isNaN(limit)) ? limit : null,
         offset: (!isNaN(offset)) ? offset : null,

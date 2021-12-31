@@ -1,6 +1,6 @@
 <template>
   <div>
-      <router-link :to="{name: 'profile'}"><img class="photo-profil" :src="photo" :alt="`Photo de ${name}`"></router-link>
+      <router-link :to="{name: 'profile'}"><img class="photo-profil" :src="photo" alt="`Photo de profil`"></router-link>
       <!-- <button class="btn btn-primary">TEST</button> -->
   </div>
 </template>
@@ -12,11 +12,11 @@ export default {
     name: 'Post',
     data(){
         return {
-            photo: 'https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_960_720.jpg'  ,
-            name: ''          
+            // photo: 'https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_960_720.jpg'  ,
+            // name: ''          
         }
     },
-    // props: ['photo'],
+    props: ['photo'],
     methods: {
         getUser() {
             axios.get('http://localhost:3000/api/users/profile')

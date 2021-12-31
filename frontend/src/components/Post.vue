@@ -1,7 +1,7 @@
 <template>
   <div class="card">
       <div class="card-header post-header">
-          <bubble class="member-photo"></bubble>
+          <bubble class="member-photo" :photo="post.User.photo"></bubble>
           <div class="post-details">
             <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>          
             <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>
@@ -56,16 +56,18 @@ export default {
             align-items: center;
         }
         .member-photo {
-            width: 15%;
-            height: 100%;
+            width: 100px;
+            height: 100px;
+            margin-right: 25px;
             a {
                 width: 100%;
                 height: 100%;
             }
-            img {
-                width: 100%;
-                height: 100%;
-            }
+            // img {
+            //     object-fit: cover;
+            //     width: 100%;
+            //     height: 100%;
+            // }
         }
 
         .post {
