@@ -15,7 +15,7 @@
                     <post v-for="(post, index) in posts" :key="index" :post="post">{{post}}</post>
                 </div>
                 <div class="col-lg-3 user-card">
-                    <member></member>
+                    <member :user="user"></member>
                 </div>
             </div>
             <!-- <img :src="{{ photo }}" :alt="Photo de {{ name }}"> -->
@@ -36,7 +36,13 @@ export default {
     name: 'PostList',
     data(){
         return {
-            posts: [] 
+            posts: [],
+            user: {
+                email: '',
+                firstname: '',
+                lastname: '',
+                photo: ''
+            }
         }
     },
     components: {
@@ -56,15 +62,29 @@ export default {
             // .then(res => this.posts = res.data)
             .then((res) => {
                 this.posts = res.data
-                console.log(res.data);
             })
                 
             .catch(() => console.log('Impossible de récupérer les posts !'))
         },
+        getUser(){
+            const userId = sessionStorage.getItem('userId');
+            const token = sessionStorage.getItem('token')
+            axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
+                headers: {
+                    'authorization': `Bearer ${token}`
+                }
+            }).then(res => {
+                this.user.email = res.data.email;
+                this.user.firstname = res.data.firstname;
+                this.user.lastname = res.data.lastname;
+                this.user.photo = res.data.photo;
+            }).catch(err => console.log(err))
+        }
         
     },
-    beforeMount(){
-        this.getAllPosts()
+    async beforeMount(){
+        await this.getAllPosts()
+        await this.getUser()
     }
 }
 </script>

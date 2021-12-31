@@ -48,6 +48,7 @@ export default {
                 password: this.password
             }) 
                 .then((res) => {
+                    console.log(res.data);
                     this.$store.state.userId = res.data.userId;
                     sessionStorage.setItem('userId', res.data.userId);
                     sessionStorage.setItem('token', res.data.token);

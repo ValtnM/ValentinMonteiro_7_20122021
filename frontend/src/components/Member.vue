@@ -2,12 +2,12 @@
   <div>
     <div class="member-card">
       <div class="card">
-        <bubble class="member-photo"></bubble>
+        <bubble class="member-photo" :photo="user.photo"></bubble>
         <div class="card-body">
-          <h2 class="card-title">John Doe</h2>
+          <h2 class="card-title">{{user.firstname}} {{ user.lastname }}</h2>
           <div class="email">
             <i class="fas fa-at"></i>
-            <h3>john.doe@gmail.com</h3>
+            <h3>{{ user.email }}</h3>
           </div>
           <div class="modify-user">
             <button class="btn btn-primary">Modifier le profil</button>
@@ -24,6 +24,12 @@ import Bubble from '../components/Bubble.vue'
 
 export default {
   name: 'Account',
+  data(){
+    return {
+      
+    }
+  },
+  props: ['user'],
   components: {
     'bubble': Bubble,
   }
@@ -53,7 +59,8 @@ export default {
       top: -20px;
       z-index: 1;
       margin: auto;
-      width: 100%;
+      width: 300px;
+      height: 300px;
       clip-path: circle();
     }
   }
