@@ -16,7 +16,7 @@ export default {
             name: ''          
         }
     },
-    props: ['userId'],
+    // props: ['photo'],
     methods: {
         getUser() {
             axios.get('http://localhost:3000/api/users/profile')

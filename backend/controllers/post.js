@@ -21,7 +21,7 @@ exports.createPost = (req, res, next) => {
             res.status(400).json({ 'erreur': 'Texte trop long (150 caractères maximum)' })
         };
     } else {
-        imageContent = `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`;
+        imageContent = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         if(imageContent.length > 150) {
             res.status(400).json({ 'erreur': 'Nom de l\'image invalide' })
         };
@@ -66,7 +66,7 @@ exports.getAllPost = (req, res, next) => {
         offset: (!isNaN(offset)) ? offset : null,
         include: [{
             model: models.User,
-            attributes: ['firstname', 'lastname']
+            attributes: ['firstname', 'lastname', 'photo']
         }]
     }).then(posts => {
         if(posts){

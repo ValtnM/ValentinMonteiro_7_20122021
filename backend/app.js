@@ -94,7 +94,7 @@ app.use('/api/posts', postRoutes);
 
 
 // Gestion des requêtes vers la route '/images'
-app.use('/images/posts', express.static(path.join(__dirname, 'images', 'post')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 app.listen(3000);

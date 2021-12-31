@@ -1,7 +1,7 @@
 <template>
   <div class="card">
       <div class="card-header post-header">
-          <bubble class="member-photo" :userId="UserId"></bubble>
+          <bubble class="member-photo"></bubble>
           <div class="post-details">
             <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>          
             <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>

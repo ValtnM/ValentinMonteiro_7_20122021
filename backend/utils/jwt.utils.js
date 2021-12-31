@@ -8,7 +8,7 @@ module.exports = {
             isAdmin: userData.isAdmin
         }, 
         'SECRET_KEY_TOKEN',
-        { expiresIn: '1h' }        
+        { expiresIn: '4h' }        
         )
     },
     parseAuthorization: (authorization) => {

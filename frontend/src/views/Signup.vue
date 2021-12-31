@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="photo">Sélectionnez une photo de profil :</label><br>
-                                    <input type="file" id="photo" @change="onFileSelected">
+                                    <input type="file" id="image" name="image" @change="onFileSelected">
                                 </div>
                                 <!-- <button class="btn btn-danger my-3" type="submit">S'inscrire</button> -->
                                 <button class="btn btn-danger my-3" @click.prevent="createUser">S'inscrire</button>
@@ -68,7 +68,7 @@ export default {
                 lastname: '',
                 email: '',
                 password: '',
-                photo: ''
+                photo: null
             },
             message: ''
         }
@@ -78,21 +78,29 @@ export default {
     },
     methods: {
         onFileSelected(event) {
-            this.userInfos.photo = event.target.files[0].name
+            this.userInfos.photo = event.target.files[0]
+            console.log(event);
         },
         signupMessage(message){
             this.message = message;
         },
         createUser(){
-
+            let formData = new FormData();
+            formData.append('firstname', this.userInfos.firstname)
+            formData.append('lastname', this.userInfos.lastname)
+            formData.append('email', this.userInfos.email)
+            formData.append('password', this.userInfos.password)
+            formData.append('image', this.userInfos.photo)
             // this.$store.dispatch('createUser', {
             //     ...this.userInfos
             // }).then(() => this.signupMessage('success'))
             // .catch(() => this.signupMessage('failure'))
 
 
-            axios.post('http://localhost:3000/api/users/signup', {
-                ...this.userInfos
+            axios.post('http://localhost:3000/api/users/signup', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             })
                 .then(() => this.signupMessage('success'))
                 .catch(() => this.signupMessage('failure'))

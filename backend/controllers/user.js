@@ -9,12 +9,11 @@ const passwordRegex = /^(?=.*\d).{4,8}$/;
 
 
 exports.signup = (req, res, next) => {
-    console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
-    const photo = req.body.photo;
+    const photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
     if(email == null || password == null || firstname == null || lastname == null) {
         return res.status(400).json({ 'erreur': 'paramètres manquants' });
