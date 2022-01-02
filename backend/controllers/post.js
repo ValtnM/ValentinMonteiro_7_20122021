@@ -79,3 +79,33 @@ exports.getAllPost = (req, res, next) => {
         res.status(500).json({ "erreur": "Champs invalides"});
     });
 };
+
+exports.getUserPost = (req, res, next) => {
+    const userId = req.params.id;
+    
+    const fields = req.query.fields;
+    const limit = parseInt(req.query.limit);
+    const offset = parseInt(req.query.offset);
+    const order = req.query.order;
+
+    models.Post.findAll({
+        where: {userId: userId},
+        order: [(order != null) ? order.split(':') : ['id', 'DESC']],
+        attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+        limit: (!isNaN(limit)) ? limit : null,
+        offset: (!isNaN(offset)) ? offset : null,
+        include: [{
+            model: models.User,
+            attributes: ['id','firstname', 'lastname', 'photo']
+        }]
+    }).then(posts => {
+        if(posts){
+            res.status(200).json(posts);
+        } else {
+            res.status(404).json({ "erreur": "Aucun message trouvé"});
+        }
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ "erreur": "Champs invalides"});
+    });
+};

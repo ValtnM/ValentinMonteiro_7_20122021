@@ -33,7 +33,7 @@
                     <input type="file" id="image" name="image" @change="onFileSelected">
                 </div>
 
-                <button class="btn btn-primary" @click.prevent="createPost">Publier</button>
+                <button class="btn btn-primary" @click="createPost">Publier</button>
             </form>
           </div>
       </div>
@@ -60,25 +60,7 @@ export default {
         createPost() {    
             const token = sessionStorage.getItem('token');
             this.content = true;    
-            // if(this.contentType === "text"){
-            //     this.newPost.imageContent = null;
-            // } else {
-            //     this.newPost.textContent = "";
-            // }
-            // if(!this.newPost.textContent && !this.newPost.imageContent) {
-            //     this.content = false;
-            // } else {
-            //     console.log('OK');
-            //     axios.post('http://localhost:3000/api/posts/new', this.newPost, {
-            //         headers: {
-            //             'authorization': `Bearer ${token}`,
-            //             // 'Content-Type': 'multipart/form-data'
-            //         }
-            //     })
-            //         .then(res => console.log(res))
-            //         .catch(() => console.log('Ceci est une erreur'))
-            // }
-
+            
             if(!this.textContent && !this.imageContent){
                 this.content = false;
             } else if(this.contentType === "text"){

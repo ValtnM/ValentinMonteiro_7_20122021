@@ -50,7 +50,7 @@ export default {
                 .then((res) => {
                     console.log(res.data);
                     this.$store.state.userId = res.data.userId;
-                    sessionStorage.setItem('userId', res.data.userId);
+                    sessionStorage.setItem('userId', parseInt(res.data.userId));
                     sessionStorage.setItem('token', res.data.token);
                     this.$router.push('/posts')
                 })

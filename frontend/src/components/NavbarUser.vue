@@ -8,7 +8,8 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link  class="nav-link" :class="{ 'active-link': isActive  }" :to="{name: 'profile'}">MON COMPTE</router-link>
+            <!-- <router-link  class="nav-link" :class="{ 'active-link': isActive  }" :to="{name: 'profile', params: { id: userId}}" :key="$route.fullPath">MON COMPTE</router-link> -->
+            <a  class="nav-link" :class="{ 'active-link': isActive  }" :href="$router.resolve({name: 'profile', params: { id: userId}}).href">MON COMPTE</a>
           </li>
           <li class="nav-item">
             <router-link  class="nav-link" :to="{name: 'login'}">DECONNEXION</router-link>
@@ -24,34 +25,35 @@ export default {
     name: 'NavbarUser',
     data(){
       return {
-        userId: '',
+        userId: null,
         profileId: '',
-        isActive: true
+        isActive: false
       }
     },
     methods: {
       getProfileId(){
-        this.userId = sessionStorage.getItem('userId');
+        this.userId = parseInt(sessionStorage.getItem('userId'));
         this.profileId = this.$route.params.id;
       },
       activeLink(){
         if(this.profileId == this.userId){
-          this.isActive = false;
-        } else {
           this.isActive = true;
+        } else {
+          this.isActive = false;
         }
-      }
+      },
     },
     created(){
       this.getProfileId()
       this.activeLink()
-    }
+    },
+    
 }
 </script>
 
 <style lang="scss" scoped>
   .active-link {
-    color: rgba(255,255,255,0.55)!important;
+    color: rgba(255,255,255,1)!important;
     font-size: 1em!important;
     font-weight: 500!important;
   }

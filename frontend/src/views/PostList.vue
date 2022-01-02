@@ -87,7 +87,10 @@ export default {
     async created(){
         await this.getAllPosts()
         await this.getUser()
-    }
+    },
+    // beforeUpdate(){
+    //     this.getAllPosts()
+    // }
 }
 </script>
 

@@ -2,6 +2,7 @@
   <div>
     <navbar-user></navbar-user>
     <member :user="user"></member>
+    <post class="post" v-for="(post, index) in posts" :key="index" :post="post">{{ post }}</post>
   </div>
 </template>
 
@@ -10,6 +11,7 @@ import axios from 'axios';
 
 import NavbarUser from '../components/NavbarUser.vue'
 import Member from '../components/Member.vue'
+import Post from '../components/Post.vue'
 
 export default {
   name: 'Profile',
@@ -21,13 +23,16 @@ export default {
         lastname: '',
         email: '',
         photo: ''
-      }
-    }
+      },
+      posts: []
+    } 
   },
   components: {
     'navbar-user': NavbarUser,
     'member': Member,
+    'post': Post
   },
+  
   methods: {
     getUser(){
       const userId = this.$route.params.id;
@@ -43,51 +48,70 @@ export default {
         this.user.email = res.data.email;
         this.user.photo = res.data.photo;
       }).catch(err => console.log(err))
+    },
+    getUserPost(){
+      const userId = this.$route.params.id;
+      const token = sessionStorage.getItem('token');
+      axios.get(`http://localhost:3000/api/posts/${userId}`, {
+        headers: {
+          'authorization': `Bearer ${token}`
+        }
+      }).then(res => {
+        this.posts = res.data
+        // console.log(res.data);
+      }).catch(err => {
+        console.log(err);
+      })
     }
   },
   created(){
     this.getUser()
-  }
+    this.getUserPost()
+  },
 }
 </script>
 
 
 
 <style lang="scss" scoped>
-  .card {
-    margin: 0 auto;    
-    &-body {
-      padding-top: 175px;
-    }
+  .post{
+    max-width: 1000px;
   }
 
-  .user {
-    &-photo {
-      position: relative;
-      top: 150px;
-      z-index: 1;
-      margin: auto;
-      width: 300px;
-      height: 300px;
-    }
-  }
-  .email {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    i {
-      font-size: 1.4em;
-    }
-    h3 {
-      margin: auto 0 auto 10px;
-    }
-  }
-  .modify-user {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    .btn {
-      margin-top: 15px;
-    }
-  }
+  // .card {
+  //   margin: 0 auto 50px auto;    
+  //   &-body {
+  //     padding-top: 175px;
+  //   }
+  // }
+
+  // .user {
+  //   &-photo {
+  //     position: relative;
+  //     top: 150px;
+  //     z-index: 1;
+  //     margin: auto;
+  //     width: 300px;
+  //     height: 300px;
+  //   }
+  // }
+  // .email {
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   i {
+  //     font-size: 1.4em;
+  //   }
+  //   h3 {
+  //     margin: auto 0 auto 10px;
+  //   }
+  // }
+  // .modify-user {
+  //   display: flex;
+  //   flex-direction: column;
+  //   margin-top: 20px;
+  //   .btn {
+  //     margin-top: 15px;
+  //   }
+  // }
 </style>
