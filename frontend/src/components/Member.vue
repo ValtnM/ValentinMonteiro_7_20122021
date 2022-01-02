@@ -35,11 +35,15 @@ export default {
     'bubble': Bubble,
   },
   methods: {
+
+    // Récupération de l'ID de l'utilisateur authentifié et de l'ID présent dans l'URL
     getId(){
       this.userId = sessionStorage.getItem('userId');
       this.profileId = this.$route.params.id
     }
   },
+
+  // Appel de la fonction lors de la création du composant
   created(){
     this.getId();
   },
@@ -74,6 +78,7 @@ export default {
       clip-path: circle();
     }
   }
+
   .email {
     display: flex;
     justify-content: center;
@@ -88,6 +93,7 @@ export default {
         margin: auto 0 auto 10px;
     }
   }
+  
   .modify-user {
     display: flex;
     flex-direction: column;

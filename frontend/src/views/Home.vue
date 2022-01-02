@@ -18,7 +18,6 @@
 
 <script>
 import NavbarHome from '../components/NavbarHome.vue'
-// @ is an alias to /src
 
 export default {
   name: 'Home',

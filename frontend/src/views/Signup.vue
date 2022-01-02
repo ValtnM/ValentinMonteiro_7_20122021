@@ -1,7 +1,9 @@
 <template>
     <div>
         <navbar-home></navbar-home>
+
         <div class="p-3">
+
             <div class="alert alert-success signup-message" role="alert" v-if="message === 'success'">
                 <div>
                     <i class="fas fa-check"></i>
@@ -15,6 +17,7 @@
                     Échec lors de la création du compte !
                 </div>
             </div>
+
             <div class="card signup-card">
                 <div class="row">
                     <div class="col-md-6">
@@ -44,7 +47,6 @@
                                     <label for="photo">Sélectionnez une photo de profil :</label><br>
                                     <input type="file" id="image" name="image" @change="onFileSelected">
                                 </div>
-                                <!-- <button class="btn btn-danger my-3" type="submit">S'inscrire</button> -->
                                 <button class="btn btn-danger my-3" @click.prevent="createUser">S'inscrire</button>
                             </form>
                         </div>
@@ -77,13 +79,18 @@ export default {
         'navbar-home': NavbarHome
     },
     methods: {
+
+        // Récupération du fichier image
         onFileSelected(event) {
             this.userInfos.photo = event.target.files[0]
-            console.log(event);
         },
+
+        // Création d'un message de confirmation ou d'erreur
         signupMessage(message){
             this.message = message;
         },
+
+        // Création d'un nouvel utilisateur
         createUser(){
             let formData = new FormData();
             formData.append('firstname', this.userInfos.firstname)
@@ -91,11 +98,6 @@ export default {
             formData.append('email', this.userInfos.email)
             formData.append('password', this.userInfos.password)
             formData.append('image', this.userInfos.photo)
-            // this.$store.dispatch('createUser', {
-            //     ...this.userInfos
-            // }).then(() => this.signupMessage('success'))
-            // .catch(() => this.signupMessage('failure'))
-
 
             axios.post('http://localhost:3000/api/users/signup', formData, {
                 headers: {
@@ -141,8 +143,6 @@ export default {
             margin-bottom: 30px!important;
         }
     }
-
-     signup-message
 
     form {
         .form-group {

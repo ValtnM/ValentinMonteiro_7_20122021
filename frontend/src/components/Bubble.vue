@@ -1,6 +1,6 @@
 <template>
   <div>
-      <router-link :to="{name: 'profile', params: { id: userId }}"><img class="photo-profil" :src="photo" alt="`Photo de profil`" v-if='userId'></router-link>
+      <router-link :to="{name: 'profile', params: { id: userId }}"><img class="photo-profil" :src="photo" alt="`Photo de profil`"></router-link>
   </div>
 </template>
 

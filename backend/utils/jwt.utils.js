@@ -1,6 +1,11 @@
+// Importation de jsonwebtoken
 const jwt = require('jsonwebtoken');
 
+
+// Exportation des différentes fonctions
 module.exports = {
+
+    // Création d'un nouveau token
     generateTokenForUser: (userData) => {
         return jwt.sign(
         {
@@ -11,10 +16,13 @@ module.exports = {
         { expiresIn: '4h' }        
         )
     },
+
+    // Formatage du token
     parseAuthorization: (authorization) => {
-        return (authorization != null) ? authorization.replace('Bearer ', '') : null;
-        
+        return (authorization != null) ? authorization.replace('Bearer ', '') : null;        
     },
+
+    // Récupération de l'ID de l'utilisateur dans le token
     getUserId: (authorization) => {
         let userId = -1;
         const token = module.exports.parseAuthorization(authorization);

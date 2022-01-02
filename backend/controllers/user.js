@@ -1,13 +1,19 @@
+// Importation des modules
 const bcrypt = require('bcrypt');
 const jwtUtils = require('../utils/jwt.utils');
 
+
+// Importation des modèles
 const models = require('../models')
 
+
+// Création des Regex
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const passwordRegex = /^(?=.*\d).{4,8}$/;
 
 
-
+// -----> Controllers <-----
+// Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -65,32 +71,10 @@ exports.signup = (req, res, next) => {
     .catch(err => {
         return res.status(500).json({ err });
     })
-
-
-            
-    // db.query('INSERT INTO users(email, password, firstname, lastname, photo) VALUES (?,?,?,?,?)', [req.body.email, req.body.password, req.body.firstname, req.body.lastname, req.body.photo], (err, result) => {
-    //     if (err) {
-    //         res.status(300).json({ err });
-    //     } else {
-    //         db.query('SELECT * FROM users WHERE email = ?', [req.body.email], (err, result) => {
-    //             if(err) {
-    //                 res.status(404).json({err})
-    //             } else {
-    //                 res.status(201).json({
-    //                     id: result[0].id,
-    //                     email: result[0].email,
-    //                     password: result[0].password,
-    //                     firstname: result[0].firstname,
-    //                     lastname: result[0].lastname,
-    //                     photo: result[0].photo
-    //                 })                            
-    //             }
-    //         })
-    //     }
-    // })
 };
 
 
+// Connexion d'un utilisateur
 exports.login = (req, res, next) => {
 
     const email = req.body.email;
@@ -100,7 +84,6 @@ exports.login = (req, res, next) => {
     if(email == null || password == null) {
         return res.status(400).json({ error: 'Paramètre manquant !' });
     }
-
 
     models.User.findOne({
         where: { email: email }
@@ -131,6 +114,8 @@ exports.login = (req, res, next) => {
         });
 }
 
+
+// Récupération des données d'un utilisateur
 exports.getOneUser = (req, res, next) => {
     const userId = req.params.id;
     models.User.findOne({
@@ -146,31 +131,7 @@ exports.getOneUser = (req, res, next) => {
 }
 
 
-// exports.getOneUser = (req, res, next) => {
-   
-//     const headerAuth = req.headers['authorization'];
-//     const userId = jwtUtils.getUserId(headerAuth);
-//     if(userId < 0) {
-//         console.log(`id est égal à : ${userId}`);
-
-//         return res.status(400).json({ 'erreur': 'Token incorrect' });
-//     }
-//     models.User.findOne({
-//         attributes: [ 'id', 'email', 'firstname', 'lastname', 'photo' ],
-//         where: { id: userId }
-//     })
-//         .then((user) => {
-//             if(user) {
-//                 res.status(201).json(user);
-//             } else {
-//                 res.status(404).json({ 'erreur': 'Utilisateur introuvable'})
-//             }
-//         })
-//         .catch((err) => {
-//             res.status(500).json({ err })
-//         });
-// };
-
+// Mise à jour des données d'un utilisateur
 exports.updateUser = (req, res, next) => {
     const headerAuth = req.headers['authorization'];
     console.log(req.header);
@@ -210,24 +171,3 @@ exports.updateUser = (req, res, next) => {
         })
     
 }
-
-
-exports.getAllUsers = (req, res, next) => {
-    db.query('SELECT * FROM users', (err, result) => {
-        if (err) {
-            res.json({error});
-        } else {
-            res.status(200).json(result);
-        }
-    })
-};
-
-// exports.getOneUser = (req, res, next) => {
-//     db.query('SELECT * FROM users WHERE id = ?', [req.params.id], (err, result) => {
-//         if (err) {
-//             console.log({ error });
-//         } else {
-//             res.status(200).json(result);
-//         }
-//     })
-// };

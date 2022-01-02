@@ -31,10 +31,14 @@ export default {
       }
     },
     methods: {
+
+      // Récupération de l'ID de l'utilisateur authentifié et de l'ID présent dans l'URL
       getProfileId(){
         this.userId = parseInt(sessionStorage.getItem('userId'));
         this.profileId = this.$route.params.id;
       },
+
+      // Comparaison des deux ID
       activeLink(){
         if(this.profileId == this.userId){
           this.isActive = true;
@@ -43,6 +47,8 @@ export default {
         }
       },
     },
+
+    // Appel des fonctions lors de la création du composant
     created(){
       this.getProfileId()
       this.activeLink()

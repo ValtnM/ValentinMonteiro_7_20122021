@@ -54,15 +54,22 @@ export default {
         }
     },
     methods: {
+
+        // Récupération du fichier image uploadé
         onFileSelected(event) {
             this.imageContent = event.target.files[0]
         },
+
+        // Création d'un nouveau post
         createPost() {    
             const token = sessionStorage.getItem('token');
             this.content = true;    
             
+            // Aucun contenu ajouté
             if(!this.textContent && !this.imageContent){
                 this.content = false;
+
+            // Texte ajouté
             } else if(this.contentType === "text"){
                 this.imageContent = null
                 if(!this.textContent){
@@ -77,6 +84,8 @@ export default {
                         .then(res => console.log(res))
                         .catch(() => console.log('Ceci est une erreur'))
                 }
+
+            // Image ajoutée
             } else if(this.contentType === "img") {
                 this.textContent = "";
                 if (!this.imageContent){
@@ -122,10 +131,5 @@ export default {
     .form-group {
         margin-bottom: 15px;
     }
-
-    // .undefined-field {
-    //     background: red;
-    //     color: white;
-    //     font-weight: 600;
-    // }
+    
 </style>

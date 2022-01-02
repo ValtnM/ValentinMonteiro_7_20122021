@@ -34,6 +34,8 @@ export default {
         'bubble': Bubble
     },
     methods: {
+
+        // Formatage de la date de création de post
         getDate(date){
             const newDate = date.slice(0,-8);
             const time = newDate.split('T')[1];
@@ -47,8 +49,7 @@ export default {
 <style lang="scss" scoped>
     .card {
         background: #fff;
-        margin: 50px auto;
-        
+        margin: 50px auto;        
 
         &-header {
             display: flex;
@@ -62,11 +63,6 @@ export default {
                 width: 100%;
                 height: 100%;
             }
-            // img {
-            //     object-fit: cover;
-            //     width: 100%;
-            //     height: 100%;
-            // }
         }
 
         .post {
@@ -105,7 +101,6 @@ export default {
                 padding: 10px;
                 display: flex;
                 background: #FFE9E9;
-                // border-top: 1px solid rgba(0,0,0,.125);
 
                 i {
                     margin: 0 10px;                

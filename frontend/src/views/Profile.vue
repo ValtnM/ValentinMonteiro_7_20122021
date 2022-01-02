@@ -31,9 +31,10 @@ export default {
     'navbar-user': NavbarUser,
     'member': Member,
     'post': Post
-  },
-  
+  },  
   methods: {
+
+    // Récupération des informations de l'utilisateur
     getUser(){
       const userId = this.$route.params.id;
       const token = sessionStorage.getItem('token');
@@ -49,6 +50,8 @@ export default {
         this.user.photo = res.data.photo;
       }).catch(err => console.log(err))
     },
+
+    // Récupération des posts de l'utilisateur
     getUserPost(){
       const userId = this.$route.params.id;
       const token = sessionStorage.getItem('token');
@@ -64,6 +67,8 @@ export default {
       })
     }
   },
+
+  // Appel des fonction lors de la création du composant
   created(){
     this.getUser()
     this.getUserPost()

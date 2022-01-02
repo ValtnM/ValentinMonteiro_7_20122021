@@ -42,14 +42,14 @@ export default {
         'navbar-home': NavbarHome
     },
     methods: {
+
+        // Connexion de l'utilisateur et stockage de l'ID et du token dans le session storage
         login(){            
             axios.post('http://localhost:3000/api/users/login', {
                 email: this.email,
                 password: this.password
             }) 
                 .then((res) => {
-                    console.log(res.data);
-                    this.$store.state.userId = res.data.userId;
                     sessionStorage.setItem('userId', parseInt(res.data.userId));
                     sessionStorage.setItem('token', res.data.token);
                     this.$router.push('/posts')
@@ -58,11 +58,6 @@ export default {
                     console.log("erreur : " + err);
                     this.loginFailure = true;
                 })
-            // this.$store.dispatch('login', {
-            //     email: this.email,
-            //     password: this.password
-            // }).then((res) => console.log(res))
-            // .catch(() => console.log('NUL!'))
         }
     }
 }
@@ -84,9 +79,7 @@ export default {
             text-align: center;
             margin-bottom: 30px!important;
         }
-    }
-
-    
+    }    
 
     form button {
         width: 100%;

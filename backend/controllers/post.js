@@ -1,16 +1,18 @@
+// Importation des modules
 const jwtUtils = require('../utils/jwt.utils.js');
+
+
+// Importation des modèles
 const models = require('../models');
 
 
-
+// ----->Controllers<-----
+// Création d'un nouveau post
 exports.createPost = (req, res, next) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
     const textContent = req.body.textContent;    
     let imageContent = req.file
-
-    console.log(textContent);
-    console.log(imageContent);
 
     if(!textContent && !imageContent) {
         res.status(400).json({ 'erreur': 'paramètre manquant' });
@@ -26,9 +28,6 @@ exports.createPost = (req, res, next) => {
             res.status(400).json({ 'erreur': 'Nom de l\'image invalide' })
         };
     }
-    
-
-    console.log("IMAGE : "+imageContent);
 
     models.User.findOne({
         where: { id: userId }
@@ -53,6 +52,8 @@ exports.createPost = (req, res, next) => {
     });
 };
 
+
+// Récuperation de tous les posts
 exports.getAllPost = (req, res, next) => {
     const fields = req.query.fields;
     const limit = parseInt(req.query.limit);
@@ -80,6 +81,8 @@ exports.getAllPost = (req, res, next) => {
     });
 };
 
+
+// Récupération des posts d'un utilisateur
 exports.getUserPost = (req, res, next) => {
     const userId = req.params.id;
     
