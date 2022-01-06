@@ -73,6 +73,9 @@ export default {
     this.getUser()
     this.getUserPost()
   },
+  updated(){
+    this.getUser()
+  }
 }
 </script>
 

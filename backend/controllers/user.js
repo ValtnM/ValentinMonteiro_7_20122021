@@ -1,6 +1,7 @@
 // Importation des modules
 const bcrypt = require('bcrypt');
 const jwtUtils = require('../utils/jwt.utils');
+const fs = require('fs')
 
 
 // Importation des modèles
@@ -15,6 +16,7 @@ const passwordRegex = /^(?=.*\d).{4,8}$/;
 // -----> Controllers <-----
 // Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
+    console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
     const firstname = req.body.firstname;
@@ -134,20 +136,36 @@ exports.getOneUser = (req, res, next) => {
 // Mise à jour des données d'un utilisateur
 exports.updateUser = (req, res, next) => {
     const headerAuth = req.headers['authorization'];
-    console.log(req.header);
-    let userId = jwtUtils.getUserId(headerAuth);
+    const userId = jwtUtils.getUserId(headerAuth);
 
+    const email = req.body.email
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
-    const photo = req.body.photo;
-
+    const photo = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+   
+    // Recherche des informations de l'utilisateur dans la BDD
     models.User.findOne({
-        attributes: ['id', 'firstname', 'lastname', 'photo'],
+        attributes: ['id', 'email', 'firstname', 'lastname', 'photo'],
         where: { id: userId }
     })
         .then(user => {
             if(user) {
+
+                // Suppression de l'ancienne photo
+                if(photo != null) {
+                    const photoName = user.photo.split('/images/')[1];
+                    fs.unlink(`images/${photoName}`, (error) => {
+                        if(error){
+                            console.log("Echec de suppression de l'image : " + error);
+                        } else {
+                            console.log("Image supprimée avec succès !");
+                        };
+                    });
+                };
+
+                // Mise à jour du profil avec les nouvelles informations
                 user.update({
+                    email: (email ? email : user.email),
                     firstname: (firstname ? firstname : user.firstname),
                     lastname: (lastname ? lastname : user.lastname),
                     photo: (photo ? photo : user.photo)

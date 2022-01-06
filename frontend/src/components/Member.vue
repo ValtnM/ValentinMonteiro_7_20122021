@@ -9,9 +9,37 @@
             <i class="fas fa-at"></i>
             <h3>{{ user.email }}</h3>
           </div>
-          <div class="modify-user" v-if="userId == profileId">
-            <button class="btn btn-primary">Modifier le profil</button>
+          <div class="modify-user" v-if="userId == profileId && !updateMode">
+            <button class="btn btn-primary" @click="toggleUpdateMode" >Modifier le profil</button>
             <button class="btn btn-danger">Supprimer le profil</button>
+          </div>
+          <div class="updateForm" v-if="updateMode">
+            <div class="card-body">
+              <form method="post">
+                  <div class="form-group">
+                      <label for="email">Email</label>
+                      <input class="form-control" type="text" id="email" placeholder="Entrez votre adresse email..." :value="this.user.email">
+                  </div>
+                  <!-- <div class="form-group">
+                      <label for="password">Mot de passe</label>
+                      <input class="form-control" type="password" id="password" placeholder="Entrez un nouveau mot de passe..." v-model="userUpdated.password">
+                  </div> -->
+                  <div class="form-group">
+                      <label for="prenom">Prénom</label>
+                      <input class="form-control" type="text" id="prenom" placeholder="Entrez votre prénom..." :value="this.user.firstname">
+                  </div>                                
+                  <div class="form-group">
+                      <label for="nom">Nom</label>
+                      <input class="form-control" type="text" id="nom" placeholder="Entrez votre nom..." :value="this.user.lastname">
+                  </div>
+                  <div class="form-group">
+                      <label for="photo">Sélectionnez une photo de profil :</label><br>
+                      <input type="file" id="image" name="image" @change="onFileSelected">
+                  </div>
+                  <button class="btn btn-primary my-3" @click.prevent="updateUser">Mettre à jour</button>
+                  <button class="btn btn-danger" @click="toggleUpdateMode">Annuler</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -20,33 +48,104 @@
 </template>
 
 <script>
-import Bubble from '../components/Bubble.vue'
+import axios from 'axios';
+
+import Bubble from '../components/Bubble.vue';
 
 export default {
   name: 'Member',
+  props: ['user'],
   data(){
     return {
       userId: '',
-      profileId: ''
+      profileId: '',
+      userUpdated: {
+        email: '',
+        // password: '',
+        firstname: this.user.firstname,
+        lastname: this.user.lastname,
+        photo: null
+      },
+      updateMode: false
     }
   },
-  props: ['user'],
   components: {
     'bubble': Bubble,
   },
   methods: {
+    // Récupération du fichier image uploadé
+    onFileSelected(event) {
+      this.userUpdated.photo = event.target.files[0]
+    },
 
     // Récupération de l'ID de l'utilisateur authentifié et de l'ID présent dans l'URL
     getId(){
       this.userId = sessionStorage.getItem('userId');
       this.profileId = this.$route.params.id
-    }
+    },
+
+    // Activation et désactivation de l'update mode
+    toggleUpdateMode(){
+      this.updateMode = !this.updateMode;
+    },
+
+    getUserInfo(){
+      this.userUpdated.email = document.querySelector('#email').value;
+      this.userUpdated.firstname = document.querySelector('#prenom').value;
+      this.userUpdated.lastname = document.querySelector('#nom').value;
+    },
+
+    // Envoi du formulaire de modification
+    updateUser(){
+      const token = sessionStorage.getItem('token');
+      this.getUserInfo()
+      console.log(this.userUpdated);
+      let formData = new FormData();
+      formData.append('firstname', this.userUpdated.firstname)
+      formData.append('lastname', this.userUpdated.lastname)
+      formData.append('email', this.userUpdated.email)
+      // formData.append('password', this.userUpdated.password)
+      formData.append('image', this.userUpdated.photo)
+      
+      axios.put(`http://localhost:3000/api/users/profile/${this.userId}`, formData, {
+          headers: {
+            'authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          }
+      })
+          .then((res) => {
+            this.user.email = res.data.email
+            this.user.firstname = res.data.firstname
+            this.user.lastname = res.data.lastname
+            this.user.photo = res.data.photo
+            this.updateMode = false;
+          })
+          .catch((err) => console.log(err))
+    },
+
+    // Suppression de l'utilisateur
+    // deleteUser(){
+    //   const userId = this.$route.params.id;
+    //   const token = sessionStorage.getItem('token');
+
+    //   axios.delete(`http://localhost:3000/api/users/profile/${userId}`, {
+    //     headers: {
+    //       'authorization': `Bearer ${token}`
+    //     }
+    //   }).then(res => console.log(res))
+    //   .catch(err => console.log(err))
+    // }
   },
 
   // Appel de la fonction lors de la création du composant
   created(){
     this.getId();
+    this.userUpdated.email = this.user.email
   },
+  beforeMount(){
+  },
+  mounted(){
+  }
 }
 </script>
 
@@ -85,7 +184,6 @@ export default {
     align-items: center;
     width: 100%;
     i {
-        // width: 10%;
         font-size: 1.4em;
     }
     h3 {
@@ -93,7 +191,7 @@ export default {
         margin: auto 0 auto 10px;
     }
   }
-  
+
   .modify-user {
     display: flex;
     flex-direction: column;

@@ -36,7 +36,14 @@ export default {
                 firstname: '',
                 lastname: '',
                 photo: ''
-            }
+            },
+            // user: {
+            //     id: this.$store.state.currentUser.id,
+            //     email: this.$store.state.currentUser.email,
+            //     firstname: this.$store.state.currentUser.firstname,
+            //     lastname: this.$store.state.currentUser.lastname,
+            //     photo: this.$store.state.currentUser.photo
+            // }
         }
     },
     components: {
@@ -50,6 +57,9 @@ export default {
         // Récupération de tous les posts
         getAllPosts(){
             const token = sessionStorage.getItem('token')
+            if(!token) {
+                this.redirection()
+            }
            axios.get('http://localhost:3000/api/posts', {
                headers: {
                    'authorization': `Bearer ${token}`
@@ -63,28 +73,40 @@ export default {
         },
 
         // Récupération des information de l'utilisateur connecté
-        getUser(){
+        async getUser(){
             const userId = sessionStorage.getItem('userId');
             const token = sessionStorage.getItem('token')
-            axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
+            await axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
                 headers: {
                     'authorization': `Bearer ${token}`
                 }
-            }).then(res => {
+            }).then((res) => {
                 this.user.id = res.data.id;
                 this.user.email = res.data.email;
                 this.user.firstname = res.data.firstname;
                 this.user.lastname = res.data.lastname;
                 this.user.photo = res.data.photo;
+                console.log(res);
             }).catch(err => console.log(err))
-        }
-        
+        },
+        redirection(){
+            this.$router.push({ name: 'login' })
+        },
+        // async getCurrentUser(){
+        //     await this.$store.commit("getUser")
+        //     console.log(this.$store.state.currentUser);
+        // }
     },
 
+
     // Appel des fonctions lors de la création du composant
+    beforeCreate(){
+        },
     created(){
         this.getAllPosts()
         this.getUser()
+    },
+    async beforeMount(){
     }
 }
 </script>

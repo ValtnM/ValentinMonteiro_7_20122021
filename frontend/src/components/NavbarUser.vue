@@ -12,7 +12,8 @@
             <a  class="nav-link" :class="{ 'active-link': isActive  }" :href="$router.resolve({name: 'profile', params: { id: userId}}).href">MON COMPTE</a>
           </li>
           <li class="nav-item">
-            <router-link  class="nav-link" :to="{name: 'login'}">DECONNEXION</router-link>
+            <a :href="$router.resolve({name: 'login'}).href" class="nav-link" @click="disconnect">DECONNEXION</a>
+            <!-- <router-link  class="nav-link" :to="{name: 'login'}" @click.prevent="disconnect">DECONNEXION</router-link> -->
           </li>
         </ul>
       </div>
@@ -46,6 +47,12 @@ export default {
           this.isActive = false;
         }
       },
+
+      // Suppression du contenu du session storage
+      disconnect(){
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('token');
+      }
     },
 
     // Appel des fonctions lors de la création du composant
