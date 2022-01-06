@@ -54,7 +54,7 @@ import Bubble from '../components/Bubble.vue';
 
 export default {
   name: 'Member',
-  props: ['user'],
+  props: ['user', 'postsDisplay'],
   data(){
     return {
       userId: '',
@@ -66,6 +66,13 @@ export default {
         lastname: this.user.lastname,
         photo: null
       },
+      // userUpdated: {
+      //   email: '',
+      //   // password: '',
+      //   firstname: this.user.firstname,
+      //   lastname: this.user.lastname,
+      //   photo: null
+      // },
       updateMode: false
     }
   },
@@ -97,6 +104,7 @@ export default {
 
     // Envoi du formulaire de modification
     updateUser(){
+      this.$emit('hidePosts', false)
       const token = sessionStorage.getItem('token');
       this.getUserInfo()
       console.log(this.userUpdated);

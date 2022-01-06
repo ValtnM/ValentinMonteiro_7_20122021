@@ -1,8 +1,14 @@
 <template>
-  <div>
+  <div class="profile-container">
     <navbar-user></navbar-user>
-    <member :user="user"></member>
-    <post class="post" v-for="(post, index) in posts" :key="index" :post="post">{{ post }}</post>
+    <member :user="user" :postsDisplay="postsDisplay" @hidePosts="hidePostList($event)"></member>
+    <div class="display-posts">
+      <button class="btn btn-success" @click.prevent="showPosts" v-if="!postsDisplay">Afficher les publications de {{ user.firstname }}</button>
+      <button class="btn btn-success" @click.prevent="showPosts" v-if="postsDisplay">Masquer les publications de {{ user.firstname }}</button>
+    </div>
+    <div v-if="postsDisplay">
+      <post class="post" v-for="(post, index) in posts" :key="index" :post="post">{{ post }}</post>
+    </div>
   </div>
 </template>
 
@@ -24,7 +30,8 @@ export default {
         email: '',
         photo: ''
       },
-      posts: []
+      posts: [],
+      postsDisplay: false
     } 
   },
   components: {
@@ -61,20 +68,44 @@ export default {
         }
       }).then(res => {
         this.posts = res.data
-        // console.log(res.data);
       }).catch(err => {
         console.log(err);
       })
+    },
+
+    showPosts(){
+      this.getUserPost()
+      this.postsDisplay = !this.postsDisplay;
+    },
+
+    hidePostList(value) {
+      this.postsDisplay = value;
     }
   },
 
+  watch: {
+    user: {
+      handler: function(){
+        this.getUserPost();
+      }
+    }
+    // user: function(){
+    //   this.getUserPost()
+    // }
+  },
+
   // Appel des fonction lors de la création du composant
+  beforeCreate(){
+    },
   created(){
     this.getUser()
     this.getUserPost()
   },
+  mounted(){
+    
+  },
   updated(){
-    this.getUser()
+    // this.getUserPost()
   }
 }
 </script>
@@ -82,8 +113,23 @@ export default {
 
 
 <style lang="scss" scoped>
+  .profile-container {
+    min-height: 1000px;
+  }
+
   .post{
     max-width: 1000px;
+  }
+
+  .display-posts {
+    max-width: 800px;
+    margin: 40px auto 30px auto;
+
+    .btn {
+      width: 100%;
+      margin: auto;
+      text-align: center;
+    }
   }
 
   // .card {
