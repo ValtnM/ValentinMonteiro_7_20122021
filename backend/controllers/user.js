@@ -189,3 +189,58 @@ exports.updateUser = (req, res, next) => {
         })
     
 }
+
+exports.deleteUser = (req, res, next) => {
+
+    // Récupération de l'ID de l'utilisateur dans le token
+    const headerAuth = req.headers['authorization'];
+    const userId = jwtUtils.getUserId(headerAuth);
+
+    models.User.findOne({ where: { id: userId } })
+        .then(user => {
+
+            // Suppression de la photo de l'utilisateur
+            let userPhotoName = user.photo.split('/images/')[1];
+            fs.unlink(`images/${userPhotoName}`, (error) => {
+                if(error){
+                    console.log("Echec de suppression de l'image : " + error);
+                } else {
+                    console.log("Image supprimée avec succès !");
+                };
+            });
+
+            models.Post.findAll({
+                attributes: ['imageContent'],
+                where: { userId: user.id }
+            })
+                .then((posts) => {
+
+                    // Suppression des images des posts de l'utilisateur
+                    for(i = 0; i < posts.length; i++){
+                        if(posts[i].dataValues.imageContent){
+                            console.log(posts[i].dataValues.imageContent.split('images/')[1]);
+                            fs.unlink(`images/${posts[i].dataValues.imageContent.split('images/')[1]}`, (error) => {
+                                if(error){
+                                    console.log("Echec de suppression de l'image : " + error);
+                                } else {
+                                    console.log("Image supprimée avec succès !");
+                                };
+                            })
+                        }
+                    }
+                    
+                    // Suppression des posts de l'utilisateur
+                    models.Post.destroy({ where: {userId: userId} })
+                        .then(() => {
+
+                            // Suppression de l'utilisateur de la BDD
+                            models.User.destroy({ where: { id: userId } })
+                                .then(() => res.status(200).json({ message: 'Utilisateur supprimé avec succès' }))
+                                .catch(() => res.status(500).json({ message: "L'utilisateur n'a pas pu être supprimé !" }))
+                        })
+                        .catch(() => res.status(500).json({ error: "Les publications n'ont pas pu être supprimées ! " }))
+                })
+                .catch(() => res.status(500).json({ message: "Les posts n'ont pas pu être supprimés !"}))
+
+        })
+}

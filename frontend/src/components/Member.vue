@@ -11,7 +11,7 @@
           </div>
           <div class="modify-user" v-if="userId == profileId && !updateMode">
             <button class="btn btn-primary" @click="toggleUpdateMode" >Modifier le profil</button>
-            <button class="btn btn-danger">Supprimer le profil</button>
+            <button class="btn btn-danger" @click="showConfirmation">Supprimer le profil</button>
           </div>
           <div class="updateForm" v-if="updateMode">
             <div class="card-body">
@@ -107,7 +107,6 @@ export default {
       this.$emit('hidePosts', false)
       const token = sessionStorage.getItem('token');
       this.getUserInfo()
-      console.log(this.userUpdated);
       let formData = new FormData();
       formData.append('firstname', this.userUpdated.firstname)
       formData.append('lastname', this.userUpdated.lastname)
@@ -131,18 +130,9 @@ export default {
           .catch((err) => console.log(err))
     },
 
-    // Suppression de l'utilisateur
-    // deleteUser(){
-    //   const userId = this.$route.params.id;
-    //   const token = sessionStorage.getItem('token');
-
-    //   axios.delete(`http://localhost:3000/api/users/profile/${userId}`, {
-    //     headers: {
-    //       'authorization': `Bearer ${token}`
-    //     }
-    //   }).then(res => console.log(res))
-    //   .catch(err => console.log(err))
-    // }
+    showConfirmation(){
+      this.$emit('showConfirmation', true)
+    }
   },
 
   // Appel de la fonction lors de la création du composant

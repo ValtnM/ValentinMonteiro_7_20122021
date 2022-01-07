@@ -1,7 +1,7 @@
 <template>
   <div class="profile-container">
     <navbar-user></navbar-user>
-    <member :user="user" :postsDisplay="postsDisplay" @hidePosts="hidePostList($event)"></member>
+    <member :user="user" :postsDisplay="postsDisplay" @hidePosts="hidePostList($event)" @showConfirmation="showConfirmationMessage($event)"></member>
     <div class="display-posts">
       <button class="btn btn-success" @click.prevent="showPosts" v-if="!postsDisplay">Afficher les publications de {{ user.firstname }}</button>
       <button class="btn btn-success" @click.prevent="showPosts" v-if="postsDisplay">Masquer les publications de {{ user.firstname }}</button>
@@ -9,6 +9,7 @@
     <div v-if="postsDisplay">
       <post class="post" v-for="(post, index) in posts" :key="index" :post="post">{{ post }}</post>
     </div>
+    <confirmation v-if="confirmationMessage" @hideConfirmation="hideConfirmationMessage($event)"></confirmation>
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import axios from 'axios';
 import NavbarUser from '../components/NavbarUser.vue'
 import Member from '../components/Member.vue'
 import Post from '../components/Post.vue'
+import Confirmation from '../components/Confirmation.vue'
 
 export default {
   name: 'Profile',
@@ -31,13 +33,15 @@ export default {
         photo: ''
       },
       posts: [],
-      postsDisplay: false
+      postsDisplay: false,
+      confirmationMessage: false
     } 
   },
   components: {
     'navbar-user': NavbarUser,
     'member': Member,
-    'post': Post
+    'post': Post,
+    'confirmation': Confirmation
   },  
   methods: {
 
@@ -73,13 +77,25 @@ export default {
       })
     },
 
+    // Afficher la liste des posts
     showPosts(){
       this.getUserPost()
       this.postsDisplay = !this.postsDisplay;
     },
 
+    // Masquer la liste des posts
     hidePostList(value) {
       this.postsDisplay = value;
+    },
+    
+    // Afficher le message de confirmation
+    showConfirmationMessage(value){
+      this.confirmationMessage = value;
+    },
+
+    // Masquer le message de confirmation
+    hideConfirmationMessage(value){
+      this.confirmationMessage = value;
     }
   },
 
