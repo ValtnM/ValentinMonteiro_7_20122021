@@ -5,7 +5,7 @@
         <div class="container-fluid p-4" >
             <div class="row">          
                 <div class="col-lg-9 post-card">
-                    <new-post></new-post>
+                    <new-post :posts.sync="posts"></new-post>
                     <post v-for="(post, index) in posts" :key="index" :post="post" :user="user" :posts.sync="posts">{{post}}</post>
                 </div>
                 <div class="col-lg-3 user-card">

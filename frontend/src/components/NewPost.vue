@@ -33,7 +33,7 @@
                     <input type="file" id="image" name="image" @change="onFileSelected">
                 </div>
 
-                <button class="btn btn-primary" @click="createPost">Publier</button>
+                <button class="btn btn-primary" @click.prevent="createPost">Publier</button>
             </form>
           </div>
       </div>
@@ -53,6 +53,7 @@ export default {
             content: true
         }
     },
+    props: ['posts'],
     methods: {
 
         // Récupération du fichier image uploadé
@@ -69,7 +70,7 @@ export default {
             if(!this.textContent && !this.imageContent){
                 this.content = false;
 
-            // Texte ajouté
+            // Post avec du texte
             } else if(this.contentType === "text"){
                 this.imageContent = null
                 if(!this.textContent){
@@ -81,11 +82,15 @@ export default {
                             'authorization': `Bearer ${token}`,
                         }
                     })
-                        .then(res => console.log(res))
-                        .catch(() => console.log('Ceci est une erreur'))
+                        .then(res => {
+                            console.log(res);
+                            this.textContent = "";
+                            this.getAllPosts();
+                        })
+                        .catch(() => console.log('Ceci est une erreur'));
                 }
 
-            // Image ajoutée
+            // Post avec une image
             } else if(this.contentType === "img") {
                 this.textContent = "";
                 if (!this.imageContent){
@@ -100,12 +105,33 @@ export default {
                         }
                     })
                         .then(() => {
-                            console.log('ok')
+                            console.log('ok');
+                            this.imageContent = null;
+                            this.getAllPosts();
                         })
-                        .catch((err) => console.log(err))
+                        .catch((err) => console.log(err));
                 }
             }            
-        }        
+        },
+
+        getAllPosts(){
+            const token = sessionStorage.getItem('token')
+            if(!token) {
+                this.redirection()
+            }
+           axios.get('http://localhost:3000/api/posts', {
+               headers: {
+                   'authorization': `Bearer ${token}`
+               }
+           })
+            .then((res) => {
+                this.$emit('update:posts', res.data)
+            })
+                
+            .catch(() => console.log('Impossible de récupérer les posts !'))
+        },
+
+        
     }
 }
 </script>
