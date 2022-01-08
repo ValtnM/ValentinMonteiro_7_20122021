@@ -1,5 +1,6 @@
 // Importation des modules
 const jwtUtils = require('../utils/jwt.utils.js');
+const fs = require('fs')
 
 
 // Importation des modèles
@@ -132,3 +133,28 @@ exports.addLike = (req, res, next) => {
         })
         .catch(() => res.status(404).json({ error: 'Post introuvable !' }));
 };
+
+
+exports.deletePost = (req, res, next) => {
+    const postId = req.params.id;
+    
+    models.Post.findOne({ where: { id: postId } })
+        .then(post => {
+            if(post.dataValues.imageContent){
+                const postPhotoName = post.dataValues.imageContent.split('/images/')[1];
+                fs.unlink(`images/${postPhotoName}`, (error) => {
+                    if(error){
+                        console.log("Echec de suppression de l'image : " + error);
+                    } else {
+                        console.log("Image supprimée avec succès !");
+                    };
+                })
+            }
+            models.Post.destroy({ where: { id: postId } })
+                .then(() => res.status(200).json({ message: "Publication supprimée !" }))
+                .catch(err => res.status(500).json({ err }))
+            
+
+        }).catch(() => res.status(400).json({ "erreur": "Publication introuvable !" }))
+    
+}

@@ -7,7 +7,7 @@
       <button class="btn btn-success" @click.prevent="showPosts" v-if="postsDisplay">Masquer les publications de {{ user.firstname }}</button>
     </div>
     <div v-if="postsDisplay">
-      <post class="post" v-for="(post, index) in posts" :key="index" :post="post">{{ post }}</post>
+      <post class="post" v-for="(post, index) in posts" :key="index" :post="post" :user="user">{{ post }}</post>
     </div>
     <confirmation v-if="confirmationMessage" @hideConfirmation="hideConfirmationMessage($event)"></confirmation>
   </div>

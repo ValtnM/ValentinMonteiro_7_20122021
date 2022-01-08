@@ -6,7 +6,7 @@
             <div class="row">          
                 <div class="col-lg-9 post-card">
                     <new-post></new-post>
-                    <post v-for="(post, index) in posts" :key="index" :post="post">{{post}}</post>
+                    <post v-for="(post, index) in posts" :key="index" :post="post" :user="user" :posts.sync="posts">{{post}}</post>
                 </div>
                 <div class="col-lg-3 user-card">
                     <member :user="user"></member>
@@ -85,6 +85,8 @@ export default {
         redirection(){
             this.$router.push({ name: 'login' })
         },
+
+        
         
     },
 

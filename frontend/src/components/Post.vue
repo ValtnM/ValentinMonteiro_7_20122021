@@ -1,9 +1,9 @@
 <template>
   <div class="card">
       <div class="card-header post-header">
-          <!-- <bubble class="member-photo" :photo="post.User.photo" :userId="post.User.id"></bubble> -->
+          <bubble class="member-photo" :photo="post.User.photo" :userId="post.User.id"></bubble>
           <div class="post-details">
-            <!-- <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>           -->
+            <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>          
             <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>
           </div>
       </div>
@@ -20,13 +20,17 @@
           </button>
           <!-- <div><i class="fas fa-comment-dots comment"></i></div> -->
       </div>
+      <div class="post-button" v-if="user.id == this.post.userId">
+          <button class="btn btn-primary">Modifier</button>
+          <button class="btn btn-danger" @click="deletePost">Supprimer</button>
+      </div>
   </div>
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
-// import Bubble from './Bubble.vue'
+import Bubble from './Bubble.vue'
 
 export default {
     name: 'Post',
@@ -34,17 +38,21 @@ export default {
         return {
            like: this.post.like,
            dislike: this.post.dislike,
+            postButtons: null,
         }
     },
-    props: ['post'],
+    props: ['post', 'user', 'posts'],
     components: {
-        // 'bubble': Bubble
+        'bubble': Bubble
     },
     computed: {
+       
+
         likeIncrement(){
             return this.like + 1 ;
             // console.log(this.like);
-        }
+        },
+
     },
     methods: {
 
@@ -54,6 +62,39 @@ export default {
             const time = newDate.split('T')[1];
             const day = newDate.split('T')[0].split('-').reverse().join('-');
             return `${day} à ${time}`
+        },
+
+        // Suppression de la publication
+        deletePost(){
+            const postId = this.post.id;
+            const token = sessionStorage.getItem('token');
+
+            axios.delete(`http://localhost:3000/api/posts/${postId}`, {
+                headers: {
+                    'authorization': `Bearer ${token}`
+                }
+            })
+                .then(res => {
+                    console.log(res)
+                    this.deleteToPostList()
+                })
+                .catch(err => console.log(err))
+        },
+
+        // Mise à jour de la variable 'posts' dans l'élément parent
+        deleteToPostList(){
+            this.selectPostToDelete()
+            console.log(this.posts);
+            this.$emit('update:posts', this.posts)
+        },
+
+        // Suppression du post de la props 'posts'
+        selectPostToDelete(){
+            for(let i = 0; i < this.posts.length; i++){
+                if(this.posts[i].id == this.post.id){
+                    this.posts.splice(i, 1);
+                }
+            }
         },
 
         addLike(){
@@ -66,7 +107,7 @@ export default {
             //     }
             // })
         }
-    }
+    },   
 }
 </script>
 
@@ -135,6 +176,16 @@ export default {
                 }
                 .like, .dislike {
                     color: white;
+                }
+            }
+
+            &-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+
+                .btn {
+                    margin-left: 10px;
                 }
             }
         }
