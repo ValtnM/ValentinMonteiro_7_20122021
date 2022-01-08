@@ -69,6 +69,8 @@ exports.getAllPost = (req, res, next) => {
             model: models.User,
             attributes: ['id','firstname', 'lastname', 'photo']
         }]
+
+        
     }).then(posts => {
         if(posts){
             res.status(200).json(posts);
@@ -111,4 +113,22 @@ exports.getUserPost = (req, res, next) => {
         console.log(err);
         res.status(500).json({ "erreur": "Champs invalides"});
     });
+};
+
+exports.addLike = (req, res, next) => {
+    const headerAuth = req.headers['authorization'];
+    const userId = jwtUtils.getUserId(headerAuth);
+    const postId = req.params.id;
+    console.log('body: ' + req.body.like);
+
+    models.Post.findOne({ where: { id: postId } })
+        .then(post => {
+            console.log(post.dataValues);
+            post.update({
+                like: req.body.like
+            })
+                .then(() => res.status(200).json({ message: 'Données mises à jour !' }))
+                .catch((err) => res.status(500).json({ err }))
+        })
+        .catch(() => res.status(404).json({ error: 'Post introuvable !' }));
 };

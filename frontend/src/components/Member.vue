@@ -66,13 +66,6 @@ export default {
         lastname: this.user.lastname,
         photo: null
       },
-      // userUpdated: {
-      //   email: '',
-      //   // password: '',
-      //   firstname: this.user.firstname,
-      //   lastname: this.user.lastname,
-      //   photo: null
-      // },
       updateMode: false
     }
   },
@@ -140,10 +133,6 @@ export default {
     this.getId();
     this.userUpdated.email = this.user.email
   },
-  beforeMount(){
-  },
-  mounted(){
-  }
 }
 </script>
 
@@ -155,8 +144,7 @@ export default {
     margin: 100px auto 0 auto;   
     &-title {
       text-align: center;
-    } 
-    
+    }     
   }
 
   .member {

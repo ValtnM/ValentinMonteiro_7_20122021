@@ -16,6 +16,7 @@ const postCtrl = require('../controllers/post.js');
 router.post('/new', auth, multer, postCtrl.createPost);
 router.get('/', auth, postCtrl.getAllPost);
 router.get('/:id', auth, postCtrl.getUserPost);
+router.put('/:id', auth, postCtrl.addLike);
 
 
 // Exportation du router

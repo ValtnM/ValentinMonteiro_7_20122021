@@ -99,29 +99,10 @@ export default {
     }
   },
 
-  watch: {
-    user: {
-      handler: function(){
-        this.getUserPost();
-      }
-    }
-    // user: function(){
-    //   this.getUserPost()
-    // }
-  },
-
   // Appel des fonction lors de la création du composant
-  beforeCreate(){
-    },
   created(){
     this.getUser()
     this.getUserPost()
-  },
-  mounted(){
-    
-  },
-  updated(){
-    // this.getUserPost()
   }
 }
 </script>
