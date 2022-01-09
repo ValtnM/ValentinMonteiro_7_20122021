@@ -135,6 +135,53 @@ exports.addLike = (req, res, next) => {
 };
 
 
+// Mise à jour d'un post
+exports.updatePost = (req, res, next) => {
+    const postId = req.params.id;
+    const textContent = req.body.textContent;
+    // console.log('body: ' + req.body);
+    let imageContent = req.file
+
+    if(!textContent && !imageContent) {
+        res.status(400).json({ 'erreur': 'paramètre manquant' });
+    };
+
+    if(textContent){
+        if(textContent.length > 150) {
+            res.status(400).json({ 'erreur': 'Texte trop long (150 caractères maximum)' })
+        };
+    } else {
+        imageContent = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        if(imageContent.length > 150) {
+            res.status(400).json({ 'erreur': 'Nom de l\'image invalide' })
+        };
+    }
+
+    models.Post.findOne({ where: { id: postId } })
+        .then(post => {
+            if(post.imageContent){
+                const photoName = post.imageContent.split('/images/')[1];
+                fs.unlink(`images/${photoName}`, (error) => {
+                    if(error){
+                        console.log("Echec de suppression de l'image : " + error);
+                    } else {
+                        console.log("Image supprimée avec succès !");
+                    };
+                });
+            }
+
+            post.update({
+                textContent: textContent ? textContent : "",
+                imageContent: imageContent ? imageContent : null
+            })
+                .then(postUpdated => res.status(200).json(postUpdated))
+                .catch(() => res.status(500).json({ 'erreur': 'Impossible de mettre à jour le post' }))
+        })
+        .catch(() => res.status(500).json({ 'erreur': 'Impossible de mettre à jour le post' }))
+}
+
+
+// Suppression d'un post
 exports.deletePost = (req, res, next) => {
     const postId = req.params.id;
     

@@ -7,6 +7,41 @@
             <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>
           </div>
       </div>
+      <div class="post-modifier" v-if="updateMode">
+        <div class="alert alert-danger" role="alert" v-if="!content">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Veuillez ajouter un texte ou une image
+        </div>
+        <form>
+            <div class="form-group">
+                <label class="pe-2">Mofifier le contenu :</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="text-post" checked value="text" v-model="contentType">
+                    <label class="form-check-label" for="text-post">
+                        Texte
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="img-post" value="img" v-model="contentType">
+                    <label class="form-check-label" for="img-post">
+                        Image
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" v-if="contentType === 'text'">
+                <label for="text">Texte :</label>
+                <textarea class="form-control" id="text" name="text" placeholder="Saisissez un texte..." v-model="textContent"></textarea>
+            </div>
+            <div class="form-group" v-if="contentType === 'img'">
+                <label for="image">Ajoutez une image :</label><br>
+                <input type="file" id="image" name="image" @change="onFileSelected">
+            </div>
+            <div class="post-modifier__form-buttons">
+                <button class="btn btn-primary" @click.prevent="updatePost">Publier</button>
+                <button class="btn btn-danger" @click.prevent="updateMode = false">Annuler</button>
+            </div>
+        </form>
+      </div>
       <div class="card-body post-body">
         <h3 class="fs-3" v-if="post.textContent">{{ post.textContent }}</h3>
         <img :src="post.imageContent" v-if="post.imageContent">
@@ -21,7 +56,7 @@
           <!-- <div><i class="fas fa-comment-dots comment"></i></div> -->
       </div>
       <div class="post-button" v-if="user.id == this.post.userId">
-          <button class="btn btn-primary">Modifier</button>
+          <button class="btn btn-primary" @click="updateMode = true">Modifier</button>
           <button class="btn btn-danger" @click="deletePost">Supprimer</button>
       </div>
   </div>
@@ -39,6 +74,11 @@ export default {
            like: this.post.like,
            dislike: this.post.dislike,
             postButtons: null,
+            updateMode: false,
+            contentType: 'text',
+            content: true,
+            textContent: this.post.textContent,
+            imageContent: null
         }
     },
     props: ['post', 'user', 'posts'],
@@ -55,6 +95,66 @@ export default {
 
     },
     methods: {
+
+        // Récupération du fichier image uploadé
+        onFileSelected(event) {
+            this.imageContent = event.target.files[0]
+        },
+
+        // Mise à jour du post
+        updatePost() {    
+            const token = sessionStorage.getItem('token');
+            const postId = this.post.id;
+            this.content = true;    
+            
+            // Aucun contenu ajouté
+            if(!this.textContent && !this.imageContent){
+                this.content = false;
+
+            // Post avec du texte
+            } else if(this.contentType === "text"){
+                this.imageContent = null
+                if(!this.textContent){
+                    this.content = false;
+                } else {
+                    const postText = { textContent: this.textContent }
+                    axios.put(`http://localhost:3000/api/posts/${postId}`, postText, {
+                        headers: {
+                            'authorization': `Bearer ${token}`,
+                        }
+                    })
+                        .then(res => {
+                            console.log(res);
+                            this.updateMode = false;
+                            this.getAllPosts();
+                        })
+                        .catch(() => console.log('Ceci est une erreur'));
+                }
+
+            // Post avec une image
+            } else if(this.contentType === "img") {
+                this.textContent = "";
+                if (!this.imageContent){
+                    this.content = false;
+                } else {
+                    let formData = new FormData();
+                    formData.append('image', this.imageContent)
+                    axios.put(`http://localhost:3000/api/posts/${postId}`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'authorization': `Bearer ${token}`,
+                        }
+                    })
+                        .then(() => {
+                            console.log('ok');
+                            this.updateMode = false;
+                            this.getAllPosts();
+                        })
+                        .catch((err) => console.log(err));
+                }
+            }            
+        },
+
 
         // Formatage de la date de création de post
         getDate(date){
@@ -97,6 +197,27 @@ export default {
             }
         },
 
+        updateForm(){
+            this.updateMode = true;
+        },
+
+        getAllPosts(){
+            const token = sessionStorage.getItem('token')
+            if(!token) {
+                this.redirection()
+            }
+           axios.get('http://localhost:3000/api/posts', {
+               headers: {
+                   'authorization': `Bearer ${token}`
+               }
+           })
+            .then((res) => {
+                this.$emit('update:posts', res.data)
+            })
+                
+            .catch(() => console.log('Impossible de récupérer les posts !'))
+        },
+
         addLike(){
             console.log(this.post);
             // const token = sessionStorage.getItem('token');
@@ -113,7 +234,9 @@ export default {
 
 <style lang="scss" scoped>
     .card {
-        background: #fff;
+        // background: #fff;
+        background: #FCFFF4;
+        
         margin: 50px auto;        
 
         &-header {
@@ -133,7 +256,8 @@ export default {
         .post {
 
             &-header {
-                background: #FFE9E9;
+                // background: #FFE9E9;
+                background: #fff;
             }
             
             &-details {
@@ -148,6 +272,20 @@ export default {
 
             &-date {
                 margin: auto 0;
+            }
+
+            &-modifier {
+                padding: 30px;
+
+                &__form-buttons {
+                    display: flex;
+                    justify-content: space-around;
+                    margin-top: 20px;
+
+                    .btn {
+                        width: 40%;
+                    }
+                }
             }
 
             &-body {
@@ -165,7 +303,9 @@ export default {
             &-footer {
                 padding: 10px;
                 display: flex;
-                background: #FFE9E9;
+                // background: #FFE9E9;
+                background: #FFF;
+                border-top: 1px solid rgba(0,0,0,.125);
                 
                 button {
                     margin-right: 10px;
@@ -181,8 +321,8 @@ export default {
 
             &-button {
                 position: absolute;
-                top: 10px;
-                right: 10px;
+                top: 20px;
+                right: 20px;
 
                 .btn {
                     margin-left: 10px;
