@@ -8,12 +8,12 @@ const auth = require('../middleware/auth')
 
 
 // Importation des controllers
-const liketCtrl = require('../controllers/like.js');
+const likeCtrl = require('../controllers/like.js');
 
 
 // Déclaration des routes Like
-router.post('/:postId/like', auth, liketCtrl.likePost);
-router.get('/:postId/like', auth, liketCtrl.getOnePostLike);
+router.post('/:postId/like', auth, likeCtrl.likePost);
+router.get('/:postId/like', auth, likeCtrl.getOnePostLike);
 
 
 

@@ -12,6 +12,7 @@ const path = require('path');
 const userRoutes = require('./routes/user.js');
 const postRoutes = require('./routes/post.js');
 const likeRoutes = require('./routes/like.js');
+const commentRoutes = require('./routes/comment.js');
 
 
 // Middlewares permettant l'analyse du corps de la requête
@@ -41,6 +42,7 @@ const db = mysql.createConnection({
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/posts', likeRoutes);
+app.use('/api/posts', commentRoutes);
 
 
 // Gestion des requêtes vers la route '/images'

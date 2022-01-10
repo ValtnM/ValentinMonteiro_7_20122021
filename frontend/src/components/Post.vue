@@ -1,71 +1,80 @@
-<template>
-  <div class="card">
-      <div class="card-header post-header">
-          <bubble class="member-photo" :photo="post.User.photo" :userId="post.User.id"></bubble>
-          <div class="post-details">
-            <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>          
-            <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>
-          </div>
-      </div>
-      <div class="post-modifier" v-if="updateMode">
-        <div class="alert alert-danger" role="alert" v-if="!content">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            Veuillez ajouter un texte ou une image
+<template>    
+    <div class="card">
+        <div class="card-header post-header">
+            <bubble class="member-photo" :photo="post.User.photo" :userId="post.User.id"></bubble>
+            <div class="post-details">
+                <h4 class="post-author">{{post.User.firstname}} {{post.User.lastname}}</h4>          
+                <p class="post-date">Publiée le {{ getDate(post.createdAt) }} </p>
+            </div>
         </div>
-        <form>
-            <div class="form-group">
-                <label class="pe-2">Mofifier le contenu :</label><br>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="text-post" checked value="text" v-model="contentType">
-                    <label class="form-check-label" for="text-post">
-                        Texte
-                    </label>
+        <div class="post-modifier" v-if="updateMode">
+            <div class="alert alert-danger" role="alert" v-if="!content">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Veuillez ajouter un texte ou une image
+            </div>
+            <form>
+                <div class="form-group">
+                    <label class="pe-2">Mofifier le contenu :</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="text-post" checked value="text" v-model="contentType">
+                        <label class="form-check-label" for="text-post">Texte</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="img-post" value="img" v-model="contentType">
+                        <label class="form-check-label" for="img-post">Image</label>
+                    </div>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="img-post" value="img" v-model="contentType">
-                    <label class="form-check-label" for="img-post">
-                        Image
-                    </label>
+                <div class="form-group" v-if="contentType === 'text'">
+                    <label for="text">Texte :</label>
+                    <textarea class="form-control" id="text" name="text" placeholder="Saisissez un texte..." v-model="textContent"></textarea>
                 </div>
+                <div class="form-group" v-if="contentType === 'img'">
+                    <label for="image">Ajoutez une image :</label><br>
+                    <input type="file" id="image" name="image" @change="onFileSelected">
+                </div>
+                <div class="post-modifier__form-buttons">
+                    <button class="btn btn-primary" @click.prevent="updatePost">Publier</button>
+                    <button class="btn btn-danger" @click.prevent="updateMode = false">Annuler</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-body post-body">
+            <h3 class="fs-3" v-if="post.textContent">{{ post.textContent }}</h3>
+            <img :src="post.imageContent" v-if="post.imageContent">
+        </div>
+        <div class="post-footer">
+            <div class="post-footer__like">
+                <button class="btn btn-primary" :class="{ liked: alreadyLiked }" @click.prevent="addLike">
+                    <div><i class="fas fa-thumbs-up like"></i>{{ post.like }}</div>
+                </button>
             </div>
-            <div class="form-group" v-if="contentType === 'text'">
-                <label for="text">Texte :</label>
-                <textarea class="form-control" id="text" name="text" placeholder="Saisissez un texte..." v-model="textContent"></textarea>
+            <div class="post-footer__comment">
+                <h5>Commentaires :</h5>
+                <form>
+                    <div class="form-group">
+                        <textarea class="form-control" id="comment" name="comment" placeholder="Saisissez un commentaire..." v-model="textComment"></textarea>
+                    </div>
+                    <button class="btn btn-primary" @click.prevent="createComment">Publier</button>
+                </form>
+                <comment class="comment-card" v-for="(comment, index) in comments" :key="index" :comment="comment" :comments.sync="comments" :user="user"></comment>
             </div>
-            <div class="form-group" v-if="contentType === 'img'">
-                <label for="image">Ajoutez une image :</label><br>
-                <input type="file" id="image" name="image" @change="onFileSelected">
-            </div>
-            <div class="post-modifier__form-buttons">
-                <button class="btn btn-primary" @click.prevent="updatePost">Publier</button>
-                <button class="btn btn-danger" @click.prevent="updateMode = false">Annuler</button>
-            </div>
-        </form>
-      </div>
-      <div class="card-body post-body">
-        <h3 class="fs-3" v-if="post.textContent">{{ post.textContent }}</h3>
-        <img :src="post.imageContent" v-if="post.imageContent">
-      </div>
-      <div class="post-footer">
-          <button class="btn btn-primary" :class="{ liked: alreadyLiked }" @click.prevent="addLike">
-            <div><i class="fas fa-thumbs-up like"></i>{{ post.like }}</div>
-          </button>
-          <!-- <button class="btn btn-danger">
-            <div><i class="fas fa-thumbs-down dislike"></i>{{ dislike }}</div>
-          </button> -->
-          <!-- <div><i class="fas fa-comment-dots comment"></i></div> -->
-      </div>
-      <div class="post-button" v-if="user.id == this.post.userId">
-          <button class="btn btn-primary" @click="updateMode = true">Modifier</button>
-          <button class="btn btn-danger" @click="deletePost">Supprimer</button>
-      </div>
-  </div>
+            <!-- <button class="btn btn-danger">
+                <div><i class="fas fa-thumbs-down dislike"></i>{{ dislike }}</div>
+            </button> -->
+            <!-- <div><i class="fas fa-comment-dots comment"></i></div> -->
+        </div>
+        <div class="post-button" v-if="user.id == this.post.userId">
+            <button class="btn btn-primary" @click="updateMode = true">Modifier</button>
+            <button class="btn btn-danger" @click="deletePost">Supprimer</button>
+        </div>
+    </div>    
 </template>
 
 <script>
 import axios from 'axios'
 
 import Bubble from './Bubble.vue'
+import Comment from './Comment.vue'
 
 export default {
     name: 'Post',
@@ -77,12 +86,15 @@ export default {
             content: true,
             textContent: this.post.textContent,
             imageContent: null,
-            alreadyLiked: false
+            alreadyLiked: false,
+            textComment: "",
+            comments: []
         }
     },
     props: ['post', 'user', 'posts'],
     components: {
-        'bubble': Bubble
+        'bubble': Bubble,
+        'comment': Comment
     },
     methods: {
 
@@ -210,6 +222,38 @@ export default {
                 .catch(err => console.log(err))
         },
 
+        // Création d'un commentaire
+        createComment(){
+            const token = sessionStorage.getItem('token');
+            const text = this.textComment;
+
+            axios.post(`http://localhost:3000/api/posts/${this.post.id}/comment`, { text: text }, {
+                headers: {
+                    'authorization': `Bearer ${token}`
+                }
+            })
+                .then(res => {
+                    this.comments.push(res.data);
+                    this.getComments();
+                    this.textComment = "";
+                })
+                .catch(err => console.log(err))
+        },
+
+
+        // Récupération des commentaires
+        getComments(){
+            const token = sessionStorage.getItem('token');
+
+            axios.get(`http://localhost:3000/api/posts/${this.post.id}/comment`, {
+                headers: {
+                    'authorization': `Bearer ${token}`
+                }
+            })
+                .then(res => this.comments = res.data)
+                .catch(err => console.log(err))
+        },
+
 
         // Récupération des posts
         getAllPosts(){
@@ -229,16 +273,17 @@ export default {
     },
     created(){
         this.checkLike()
+        this.getComments()
     }
 }
 </script>
 
 <style lang="scss" scoped>
     .card {
-        // background: #fff;
-        background: #FCFFF4;
+        background: #fff;
+        // background: #FCFFF4;
         
-        margin: 50px auto;        
+        margin: 50px auto 0 auto;        
 
         &-header {
             display: flex;
@@ -259,6 +304,7 @@ export default {
             &-header {
                 // background: #FFE9E9;
                 background: #fff;
+                border-bottom: none;
             }
             
             &-details {
@@ -304,23 +350,40 @@ export default {
             &-footer {
                 padding: 10px;
                 display: flex;
-                // background: #FFE9E9;
+                flex-direction: column;
                 background: #FFF;
-                border-top: 1px solid rgba(0,0,0,.125);
 
                 .liked {
                     background: green!important;
-                }
-                
-                .btn {
-                    margin-right: 10px;
-                }
-
+                }                
                 i {
                     margin-right: 10px;                
                 }
-                .like, .dislike {
+                .like {
                     color: white;
+                }
+
+                &__comment {
+
+                    border-top: thick double rgba(0,0,0,.125);
+                    margin-top: 10px;
+                    padding: 10px;
+
+                    form {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 10px;
+
+                        .form-group {
+                            width: 100%;
+                            margin-right: 10px;
+                        }
+
+                        .btn {
+                            width: 100px;
+                        }
+                    }
+
                 }
             }
 
@@ -334,6 +397,7 @@ export default {
                 }
             }
         }
+
 
     }
 
