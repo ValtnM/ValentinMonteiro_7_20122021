@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'postId',
         otherKey: 'userId'
       });
+
+      models.Post.belongsToMany(models.User, {
+        through: models.Comment,
+        foreignKey: 'postId',
+        otherKey: 'userId'
+      });
       
     }
   };

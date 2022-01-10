@@ -4,6 +4,8 @@ const jwtUtils = require('../utils/jwt.utils.js');
 // Importation des models
 const models = require('../models');
 
+
+// Création d'un like et modification de la valeur des likes sur le post
 exports.likePost = (req, res, next) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
@@ -87,6 +89,8 @@ exports.likePost = (req, res, next) => {
 
 }
 
+
+// Vérification de l'existence d'un like par l'utilisateur authentifié sur un post
 exports.getOnePostLike = (req, res, next) => {    
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
