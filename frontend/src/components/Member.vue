@@ -9,7 +9,7 @@
             <i class="fas fa-at"></i>
             <h3>{{ user.email }}</h3>
           </div>
-          <div class="modify-user" v-if="userId == profileId && !updateMode">
+          <div class="modify-user" v-if="(userId == profileId || isAdmin) && !updateMode">
             <button class="btn btn-primary" @click="toggleUpdateMode" >Modifier le profil</button>
             <button class="btn btn-danger" @click="showConfirmation">Supprimer le profil</button>
           </div>
@@ -54,7 +54,7 @@ import Bubble from '../components/Bubble.vue';
 
 export default {
   name: 'Member',
-  props: ['user', 'postsDisplay'],
+  props: ['user','isAdmin', 'postsDisplay'],
   data(){
     return {
       userId: '',

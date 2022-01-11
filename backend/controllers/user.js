@@ -121,7 +121,7 @@ exports.login = (req, res, next) => {
 exports.getOneUser = (req, res, next) => {
     const userId = req.params.id;
     models.User.findOne({
-        attributes: [ 'id', 'email', 'firstname', 'lastname', 'photo' ],
+        attributes: [ 'id', 'email', 'firstname', 'lastname', 'photo', 'isAdmin' ],
         where: { id: userId }
     }).then((user) => {
         if(user){

@@ -7,7 +7,7 @@
                 <div class="col-lg-9 post-card">
                     <comment></comment>
                     <new-post :posts.sync="posts"></new-post>
-                    <post v-for="(post, index) in posts" :key="index" :post="post" :user="user" :posts.sync="posts">{{post}}</post>
+                    <post v-for="(post, index) in posts" :key="index" :post="post" :user="user" :posts.sync="posts" :isAdmin="user.isAdmin">{{post}}</post>
                 </div>
                 <div class="col-lg-3 user-card">
                     <member :user="user"></member>
@@ -37,7 +37,8 @@ export default {
                 email: '',
                 firstname: '',
                 lastname: '',
-                photo: ''
+                photo: '',
+                isAdmin: false
             },            
         }
     },
@@ -61,19 +62,16 @@ export default {
                    'authorization': `Bearer ${token}`
                }
            })
-            .then((res) => {
-                console.log(res.data);
-                this.posts = res.data
-            })
+            .then((res) => this.posts = res.data)
                 
             .catch(() => console.log('Impossible de récupérer les posts !'))
         },
 
         // Récupération des information de l'utilisateur connecté
-        async getUser(){
+        getUser(){
             const userId = sessionStorage.getItem('userId');
             const token = sessionStorage.getItem('token')
-            await axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
+            axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
                 headers: {
                     'authorization': `Bearer ${token}`
                 }
@@ -83,6 +81,7 @@ export default {
                 this.user.firstname = res.data.firstname;
                 this.user.lastname = res.data.lastname;
                 this.user.photo = res.data.photo;
+                this.user.isAdmin = res.data.isAdmin;
             }).catch(err => console.log(err))
         },
         redirection(){

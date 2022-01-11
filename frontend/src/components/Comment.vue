@@ -1,9 +1,8 @@
 <template>
   <div>
-      <div class="card">
+      <div class="card" v-if="comment">
         <div class="card-header comment-header">
-            <bubble class="user-photo" :photo="comment.User.photo"></bubble>
-            <!-- <img :src="photo" alt="" width="50px"> -->
+            <bubble class="user-photo" :photo="comment.User.photo" :userId="comment.User.id"></bubble>
             <div class="comment-header__informations">
                 <div class="comment-header__informations__user">
                     <h5>{{comment.User.firstname}} {{ comment.User.lastname }}</h5>
@@ -11,7 +10,7 @@
                 </div>
                 <p>{{ comment.text }}</p>
             </div>
-            <button class="btn btn-danger delete-button" v-if="user.id == comment.User.id" @click.prevent="deleteComment">Supprimer</button>
+            <button class="btn btn-danger delete-button" v-if="user.id == comment.User.id || isAdmin" @click.prevent="deleteComment">Supprimer</button>
         </div>
       </div>
   </div>
@@ -29,7 +28,7 @@ export default {
             
         }
     },
-    props: ['comment','comments', 'user'],
+    props: ['comment','comments', 'user', "isAdmin"],
     components: {
         "bubble": Bubble
     },
@@ -70,6 +69,9 @@ export default {
             }
         },
 
+    },
+    created(){
+        // console.log("Créé: " + this.comment.User);
     }
 }
 </script>

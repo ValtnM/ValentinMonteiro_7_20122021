@@ -56,14 +56,10 @@
                     </div>
                     <button class="btn btn-primary" @click.prevent="createComment">Publier</button>
                 </form>
-                <comment class="comment-card" v-for="(comment, index) in comments" :key="index" :comment="comment" :comments.sync="comments" :user="user"></comment>
+                <comment class="comment-card" v-for="(comment, index) in comments" :key="index" :comment="comment" :comments.sync="comments" :user="user" :isAdmin="isAdmin"></comment>
             </div>
-            <!-- <button class="btn btn-danger">
-                <div><i class="fas fa-thumbs-down dislike"></i>{{ dislike }}</div>
-            </button> -->
-            <!-- <div><i class="fas fa-comment-dots comment"></i></div> -->
         </div>
-        <div class="post-button" v-if="user.id == this.post.userId">
+        <div class="post-button" v-if="user.id == this.post.userId || user.isAdmin">
             <button class="btn btn-primary" @click="updateMode = true">Modifier</button>
             <button class="btn btn-danger" @click="deletePost">Supprimer</button>
         </div>
@@ -88,10 +84,25 @@ export default {
             imageContent: null,
             alreadyLiked: false,
             textComment: "",
-            comments: []
+            comments: [
+                {
+                    User: {
+                       firsname: "",
+                       id: null,
+                       lastname: "",
+                       photo: ""
+                    },
+                    createdAt: "",
+                    id: null,
+                    postId: null,
+                    text: "",
+                    updatedAt: "",
+                    userId: null
+                }
+            ]
         }
     },
-    props: ['post', 'user', 'posts'],
+    props: ['post', 'user', 'posts', 'isAdmin'],
     components: {
         'bubble': Bubble,
         'comment': Comment
@@ -272,8 +283,8 @@ export default {
 
     },
     created(){
-        this.checkLike()
         this.getComments()
+        this.checkLike()
     }
 }
 </script>

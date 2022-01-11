@@ -1,13 +1,13 @@
 <template>
   <div class="profile-container">
     <navbar-user></navbar-user>
-    <member :user="user" :postsDisplay="postsDisplay" @hidePosts="hidePostList($event)" @showConfirmation="showConfirmationMessage($event)"></member>
+    <member :user="user" :isAdmin="authUser.isAdmin" :postsDisplay="postsDisplay" @hidePosts="hidePostList($event)" @showConfirmation="showConfirmationMessage($event)"></member>
     <div class="display-posts">
       <button class="btn btn-success" @click.prevent="showPosts" v-if="!postsDisplay">Afficher les publications de {{ user.firstname }}</button>
       <button class="btn btn-success" @click.prevent="showPosts" v-if="postsDisplay">Masquer les publications de {{ user.firstname }}</button>
     </div>
     <div v-if="postsDisplay">
-      <post class="post" v-for="(post, index) in posts" :key="index" :post="post" :user="user">{{ post }}</post>
+      <post class="post" v-for="(post, index) in posts" :key="index" :post="post" :user="authUser" :posts.sync="posts" :isAdmin="authUser.isAdmin">{{ post }}</post>
     </div>
     <confirmation v-if="confirmationMessage" @hideConfirmation="hideConfirmationMessage($event)"></confirmation>
   </div>
@@ -30,7 +30,11 @@ export default {
         firstname: '',
         lastname: '',
         email: '',
-        photo: ''
+        photo: '',        
+      },
+      authUser: {
+        id: "",
+        isAdmin: false,
       },
       posts: [],
       postsDisplay: false,
@@ -44,6 +48,20 @@ export default {
     'confirmation': Confirmation
   },  
   methods: {
+    // Récupération des information de l'utilisateur connecté
+    getAuthentifiedUser(){
+        const userId = sessionStorage.getItem('userId');
+        const token = sessionStorage.getItem('token')
+        axios.get(`http://localhost:3000/api/users/profile/${userId}`, {
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        }).then((res) => {
+            this.authUser.id = res.data.id;
+            this.authUser.isAdmin = res.data.isAdmin;
+        }).catch(err => console.log(err))
+    },
+       
 
     // Récupération des informations de l'utilisateur
     getUser(){
@@ -101,8 +119,9 @@ export default {
 
   // Appel des fonction lors de la création du composant
   created(){
-    this.getUser()
-    this.getUserPost()
+    this.getUser();
+    this.getAuthentifiedUser();
+    this.getUserPost();
   }
 }
 </script>
