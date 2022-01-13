@@ -1,12 +1,12 @@
 <template>
   <div class="profile-container">
     <navbar-user></navbar-user>
-    <member :user="user" :isAdmin="authUser.isAdmin" :postsDisplay="postsDisplay" @hidePosts="hidePostList($event)" @showConfirmation="showConfirmationMessage($event)"></member>
-    <div class="display-posts">
+    <member :user.sync="user" :isAdmin="authUser.isAdmin" :posts.sync="posts" @hidePosts="hidePostList($event)" @showConfirmation="showConfirmationMessage($event)"></member>
+    <!-- <div class="display-posts">
       <button class="btn btn-success" @click.prevent="showPosts" v-if="!postsDisplay">Afficher les publications de {{ user.firstname }}</button>
       <button class="btn btn-success" @click.prevent="showPosts" v-if="postsDisplay">Masquer les publications de {{ user.firstname }}</button>
-    </div>
-    <div v-if="postsDisplay">
+    </div> -->
+    <div>
       <post class="post" v-for="(post, index) in posts" :key="index" :post="post" :user="authUser" :posts.sync="posts" :isAdmin="authUser.isAdmin">{{ post }}</post>
     </div>
     <confirmation v-if="confirmationMessage" @hideConfirmation="hideConfirmationMessage($event)"></confirmation>

@@ -11,44 +11,38 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // models.User.belongsToMany(models.Post, {
-      //   through: models.Like,
-      //   foreignKey: 'userId',
-      //   otherKey: 'postId'
-      // });
-
-      // models.Post.belongsToMany(models.User, {
-      //   through: models.Like,
-      //   foreignKey: 'postId',
-      //   otherKey: 'userId'
-      // });
-
       models.Like.belongsTo(models.User, {
         foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        // hooks: true
         // as: 'user'
       });
 
       models.Like.belongsTo(models.Post, {
         foreignKey: 'postId',
+        onDelete: 'CASCADE',
+        // hooks: true
         // as: 'post'
       });
     }
   };
   Like.init({
-    postId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Post',
-        key: 'id'
-      }
-    },
     userId: {
       type: DataTypes.INTEGER,
-      references: {
+      onDelete: 'CASCADE',
+        references: {
         model: 'User',
         key: 'id'
       }
-    }
+    },  
+    postId: {
+      type: DataTypes.INTEGER,
+      onDelete: 'CASCADE',
+        references: {
+        model: 'Post',
+        key: 'id'
+      },
+    },
   }, {
     sequelize,
     modelName: 'Like',

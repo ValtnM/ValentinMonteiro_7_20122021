@@ -7,6 +7,7 @@ const models = require('../models');
 
 exports.getAllComments = (req, res, next) => {
     const postId = req.params.postId;
+    // console.log(postId);
 
     models.Comment.findAll({
          where: {
@@ -18,7 +19,7 @@ exports.getAllComments = (req, res, next) => {
         }]
     })
         .then(comments => res.status(200).json(comments))
-        .catch(() => res.status(400).json({ error: "Post non trouvé !" }))
+        .catch(() => res.status(400).json({ error: "Commentaire non trouvé !" }))
 }
 
 exports.createComment = (req, res , next) => {

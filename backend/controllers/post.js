@@ -34,23 +34,25 @@ exports.createPost = (req, res, next) => {
         where: { id: userId }
     })
     .then(user => {
+        console.log(user.dataValues.id);
         if(user) {
             models.Post.create({
                 textContent: textContent,
                 imageContent: imageContent,
                 like: 0,
                 dislike: 0,
-                UserId: user.id
+                userId: user.dataValues.id
             })
-            res.status(201).json({"message": "Nouveau post créé avec succès !"})
+                .then((res) => console.log(res))
+                .catch(err => console.log(err)) 
+            // res.status(201).json({"message": "Nouveau post créé avec succès !"})
                     
         } else {
             res.status(404).json({'erreur' : 'Utilisateur introuvable'});
         };
     })
-    .catch(err => {
-        res.status(500).json({ 'err': 'ERREUR !!!' });
-    });
+    .catch(err => res.status(500).json({ 'err': 'ERREUR !!!' })
+    );
 };
 
 
@@ -184,6 +186,7 @@ exports.updatePost = (req, res, next) => {
 // Suppression d'un post
 exports.deletePost = (req, res, next) => {
     const postId = req.params.id;
+    console.log("postId: "+postId);
     
     models.Post.findOne({ where: { id: postId } })
         .then(post => {
@@ -197,9 +200,10 @@ exports.deletePost = (req, res, next) => {
                     };
                 })
             }
+            console.log(post);
             models.Post.destroy({ where: { id: postId } })
                 .then(() => res.status(200).json({ message: "Publication supprimée !" }))
-                .catch(err => res.status(500).json({ err }))
+                .catch(() => res.status(500).json({ erreur: "Impossible de supprimer le post !" }))
             
 
         }).catch(() => res.status(400).json({ "erreur": "Publication introuvable !" }))

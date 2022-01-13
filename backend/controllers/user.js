@@ -48,7 +48,7 @@ exports.signup = (req, res, next) => {
 
             bcrypt.hash(password, 10)
                 .then(hash => {
-                    const newUser = models.User.create({
+                    models.User.create({
                         email: email,
                         password: hash,
                         firstname: firstname,
@@ -59,19 +59,19 @@ exports.signup = (req, res, next) => {
                     .then((newUser) => {
                         return res.status(201).json({ 'userId': newUser.id })
                     })
-                    .catch(err => {
-                        return res.status(500).json({ err })
+                    .catch(() => {
+                        return res.status(500).json({ erreur: "Impossible de créer un nouvel utilisateur" })
                     })
                 }).catch(err => {
                     return res.status(500).json({ err })
                 })
 
         } else {
-            return res.status(409).json({ 'error': 'user already exist' });
+            return res.status(409).json({ erreur: "L'utilisateur existe déjà !" });
         }
     })
     .catch(err => {
-        return res.status(500).json({ err });
+        return res.status(500).json({ erreur: "Utilisateur introuvable !" });
     })
 };
 

@@ -54,7 +54,7 @@ import Bubble from '../components/Bubble.vue';
 
 export default {
   name: 'Member',
-  props: ['user','isAdmin', 'postsDisplay'],
+  props: ['user','isAdmin', 'posts'],
   data(){
     return {
       userId: '',
@@ -119,8 +119,19 @@ export default {
             this.user.lastname = res.data.lastname
             this.user.photo = res.data.photo
             this.updateMode = false;
+            this.getUpdatePostsInfo(res.data)
+            this.$emit('update:posts', this.posts)
           })
           .catch((err) => console.log(err))
+    },
+
+    getUpdatePostsInfo(value){
+      for(let i = 0; i < this.posts.length; i++){
+        this.posts[i].User.id = value.id;
+        this.posts[i].User.firstname = value.firstname;
+        this.posts[i].User.lastname = value.lastname;
+        this.posts[i].User.photo = value.photo;
+      }
     },
 
     showConfirmation(){

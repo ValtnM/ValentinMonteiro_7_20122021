@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="card" v-if="comment">
-        <div class="card-header comment-header">
+        <div class="card-header comment-header" v-if="comment.User">
             <bubble class="user-photo" :photo="comment.User.photo" :userId="comment.User.id"></bubble>
             <div class="comment-header__informations">
                 <div class="comment-header__informations__user">

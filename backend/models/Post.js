@@ -1,5 +1,6 @@
 'use strict';
-const { Model
+const {
+  Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
@@ -11,29 +12,39 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.Post.belongsTo(models.User, {
+        onDelete: 'CASCADE',
         foreignKey: 'userId',
         allowNull: false
       });
 
       models.Post.belongsToMany(models.User, {
+        onDelete: 'CASCADE',
         through: models.Like,
         foreignKey: 'postId',
         otherKey: 'userId'
       });
 
       models.Post.belongsToMany(models.User, {
+        onDelete: 'CASCADE',
         through: models.Comment,
         foreignKey: 'postId',
-        otherKey: 'userId'
-      });
-      
+        otherKey: 'userId',
+        // hooks: true
+    });
     }
   };
   Post.init({
     textContent: DataTypes.STRING,
     imageContent: DataTypes.STRING,
     like: DataTypes.INTEGER,
-    dislike: DataTypes.INTEGER,    
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    }
   }, {
     sequelize,
     modelName: 'Post',

@@ -85,20 +85,20 @@ export default {
             alreadyLiked: false,
             textComment: "",
             comments: [
-                {
-                    User: {
-                       firsname: "",
-                       id: null,
-                       lastname: "",
-                       photo: ""
-                    },
-                    createdAt: "",
-                    id: null,
-                    postId: null,
-                    text: "",
-                    updatedAt: "",
-                    userId: null
-                }
+                // {
+                //     User: {
+                //        firsname: "",
+                //        id: null,
+                //        lastname: "",
+                //        photo: ""
+                //     },
+                //     createdAt: "",
+                //     id: null,
+                //     postId: null,
+                //     text: "",
+                //     updatedAt: "",
+                //     userId: null
+                // }
             ]
         }
     },
@@ -261,7 +261,10 @@ export default {
                     'authorization': `Bearer ${token}`
                 }
             })
-                .then(res => this.comments = res.data)
+                .then(res => {
+                    console.log(res);
+                    this.comments = res.data
+                })
                 .catch(err => console.log(err))
         },
 
@@ -353,7 +356,7 @@ export default {
                     padding: 20px;
                 }
 
-                img {
+                img {                    
                     width: 100%;
                 }
             }

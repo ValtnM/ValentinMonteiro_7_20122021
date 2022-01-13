@@ -8,29 +8,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      textContent: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
-      imageContent: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
-      like: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
-      dislike: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'Users',
           key: 'id'
         }
+      },
+      textContent: {
+        type: Sequelize.STRING
+      },
+      imageContent: {
+        type: Sequelize.STRING
+      },
+      like: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
