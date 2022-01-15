@@ -6,6 +6,11 @@ const app = express();
 // Importation des modules
 const mysql = require('mysql')
 const path = require('path');
+const helmet = require("helmet");
+
+
+// Application d'helmet
+app.use(helmet());
 
 
 // Importation des routes
@@ -28,14 +33,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
-// Connexion à la base de données
-const db = mysql.createConnection({
-    host: 'localhost',
-    database: 'groupomania',
-    user: 'root',
-    password: ''
-})
 
 
 // Ajoût des routes

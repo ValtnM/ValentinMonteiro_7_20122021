@@ -10,13 +10,12 @@ const models = require('../models')
 
 // Création des Regex
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const passwordRegex = /^(?=.*\d).{4,8}$/;
+const passwordRegex = /^(?=.*\d).{8,15}$/;
 
 
 // -----> Controllers <-----
 // Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
-    console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
     const firstname = req.body.firstname;
@@ -24,10 +23,10 @@ exports.signup = (req, res, next) => {
     const photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
     if(email == null || password == null || firstname == null || lastname == null) {
-        return res.status(400).json({ 'erreur': 'paramètres manquants' });
+        return res.status(400).json({ message: 'paramètres manquants' });
     } 
     if (firstname.length > 20 || firstname.length < 2) {
-        return res.status(400).json({ 'erreur': 'prénom invalide (doit être entre 2 et 20 caractères)' })
+        return res.status(400).json({ 'message': 'prénom invalide (doit être entre 2 et 20 caractères)' })
     } 
     if (lastname.length > 20 || lastname.length < 2) {
         return res.status(400).json({ 'erreur': 'nom invalide (doit être entre 2 et 20 caractères)' })
@@ -36,7 +35,7 @@ exports.signup = (req, res, next) => {
         return res.status(400).json({ 'erreur': 'email invalide' })
     } 
     if (!passwordRegex.test(password)) {
-        return res.status(400).json({ 'erreur': 'mot de passe invalide (doit contenir entre 4 et 8 caractères et au moins un chiffre)'})
+        return res.status(400).json({ 'erreur': 'mot de passe invalide (doit contenir entre 8 et 15 caractères et au moins un chiffre)'})
     }
 
     models.User.findOne({

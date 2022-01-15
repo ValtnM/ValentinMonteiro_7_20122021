@@ -33,13 +33,27 @@ export default {
     font-size: 0.7em;
   }
 
-  .card-body .btn {
-    width: 100%;
-    margin-top: 20px;
-    a {
-      color: white;
-      text-decoration: none;
+  #container {
+    max-height: 100vh;
+  }
+
+  .card{
+    max-width: 600px;
+    margin: 100px auto 0 auto;
+
+    &-img-top {
+      max-height: 300px;
     }
+    
+    &-body .btn {
+      width: 100%;
+      margin-top: 20px;
+      a {
+        color: white;
+        text-decoration: none;
+      }
+  }
+    // max-width: 600px;
   }
 
 </style>

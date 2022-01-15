@@ -14,6 +14,7 @@
                         <label for="password">Mot de passe</label>
                         <input class="form-control" type="password" id="password" placeholder="Entrez votre mot de passe..." v-model="password">
                     </div>
+                    <div>Pas encore de compte ? <router-link class="nav-link sign-link" :to="{name: 'signup'}">S'inscrire</router-link></div>
                     <button class="btn btn-success my-3" @click.prevent="login">Se connecter</button>
                 </form>
                 <div class="alert alert-danger" v-if="loginFailure">
@@ -69,10 +70,11 @@ export default {
         &-card {
             margin: 50px auto;
             max-width: 400px;
+
         }
         
         &-img{
-            width: 100%;
+            max-height: 300px;
         }
 
         &-title {
@@ -80,6 +82,11 @@ export default {
             margin-bottom: 30px!important;
         }
     }    
+
+    .sign-link {
+        display: inline!important;
+        padding-left: 0.5rem!important;
+    }
 
     form button {
         width: 100%;

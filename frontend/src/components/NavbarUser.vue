@@ -8,12 +8,10 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <!-- <router-link  class="nav-link" :class="{ 'active-link': isActive  }" :to="{name: 'profile', params: { id: userId}}" :key="$route.fullPath">MON COMPTE</router-link> -->
             <a  class="nav-link" :class="{ 'active-link': isActive  }" :href="$router.resolve({name: 'profile', params: { id: userId}}).href">MON COMPTE</a>
           </li>
           <li class="nav-item">
             <a :href="$router.resolve({name: 'login'}).href" class="nav-link" @click="disconnect">DECONNEXION</a>
-            <!-- <router-link  class="nav-link" :to="{name: 'login'}" @click.prevent="disconnect">DECONNEXION</router-link> -->
           </li>
         </ul>
       </div>

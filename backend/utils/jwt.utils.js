@@ -1,5 +1,7 @@
 // Importation de jsonwebtoken
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 
 
 // Exportation des différentes fonctions
@@ -29,7 +31,7 @@ module.exports = {
         
         if(token != null) {
             try {
-                const jwtToken = jwt.verify(token, 'SECRET_KEY_TOKEN');
+                const jwtToken = jwt.verify(token, process.env.TOKEN_KEY);
                 if(jwtToken != null) {
                     userId = jwtToken.userId;
                 }

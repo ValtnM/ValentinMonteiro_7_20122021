@@ -128,7 +128,11 @@ export default {
                     })
                         .then(() => {
                             this.updateMode = false;
-                            this.getAllPosts();
+                            if(this.$route.params.id){
+                                this.getUserPost()
+                            } else {
+                                this.getAllPosts();
+                            }
                         })
                         .catch(() => console.log('Ceci est une erreur'));
                 }
@@ -149,7 +153,11 @@ export default {
                     })
                         .then(() => {
                             this.updateMode = false;
-                            this.getAllPosts();
+                            if(this.$route.params.id){
+                                this.getUserPost()
+                            } else {
+                                this.getAllPosts();
+                            }
                         })
                         .catch((err) => console.log(err));
                 }
