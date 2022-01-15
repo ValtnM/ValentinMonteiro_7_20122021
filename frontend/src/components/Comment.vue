@@ -33,6 +33,7 @@ export default {
         "bubble": Bubble
     },
     methods: {
+        // Formatage de la date
          getDate(date){
             const newDate = date.slice(0,-8);
             const time = newDate.split('T')[1];
@@ -57,13 +58,11 @@ export default {
         // Mise à jour de la variable 'comments' dans l'élément parent
         deleteToCommentList(){
             this.selectCommentToDelete()
-            // bus.$emit('updatePosts', )
             if(this.$route.params.id) {
                 this.getUserPost()
             } else {
                 this.getAllPosts()                
             }
-            // this.$emit('update:comments', this.comments)
         },
 
         // Suppression du post de la props 'comments'
@@ -76,9 +75,6 @@ export default {
         },
 
     },
-    created(){
-        // console.log("Créé: " + this.comment.User);
-    }
 }
 </script>
 

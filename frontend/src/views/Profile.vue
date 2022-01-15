@@ -1,11 +1,7 @@
 <template>
   <div class="profile-container">
     <navbar-user></navbar-user>
-    <member :user.sync="user" :isAdmin="authUser.isAdmin" :posts.sync="posts" @hidePosts="hidePostList($event)" @showConfirmation="showConfirmationMessage($event)"></member>
-    <!-- <div class="display-posts">
-      <button class="btn btn-success" @click.prevent="showPosts" v-if="!postsDisplay">Afficher les publications de {{ user.firstname }}</button>
-      <button class="btn btn-success" @click.prevent="showPosts" v-if="postsDisplay">Masquer les publications de {{ user.firstname }}</button>
-    </div> -->
+    <member :user.sync="user" :isAdmin="authUser.isAdmin" :posts.sync="posts" @showConfirmation="showConfirmationMessage($event)"></member>
     <div>
       <post class="post" v-for="(post, index) in posts" :key="index" :post="post" :user="authUser" :posts.sync="posts" :isAdmin="authUser.isAdmin">{{ post }}</post>
     </div>
@@ -94,18 +90,7 @@ export default {
         console.log(err);
       })
     },
-
-    // Afficher la liste des posts
-    showPosts(){
-      this.getUserPost()
-      this.postsDisplay = !this.postsDisplay;
-    },
-
-    // Masquer la liste des posts
-    hidePostList(value) {
-      this.postsDisplay = value;
-    },
-    
+   
     // Afficher le message de confirmation
     showConfirmationMessage(value){
       this.confirmationMessage = value;

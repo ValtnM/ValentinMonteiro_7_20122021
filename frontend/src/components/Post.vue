@@ -69,8 +69,6 @@
 <script>
 import axios from 'axios'
 
-// import {bus} from '../main'
-
 import Bubble from './Bubble.vue'
 import Comment from './Comment.vue'
 
@@ -189,7 +187,6 @@ export default {
         deleteToPostList(){
             this.selectPostToDelete()
             this.$emit('update:posts', this.posts)
-            // this.checkLike();
         },
 
         // Suppression du post de la props 'posts'
@@ -227,9 +224,7 @@ export default {
                     'authorization': `Bearer ${token}`
                 }
             })
-                .then(res => {
-                    this.alreadyLiked = res.data.message
-                })
+                .then(res => this.alreadyLiked = res.data.message)
                 .catch(err => console.log(err))
         },
 
@@ -243,14 +238,12 @@ export default {
                     'authorization': `Bearer ${token}`
                 }
             })
-                .then(res => {
-                    console.log(res);
+                .then(() => {
                     if(this.$route.params.id){
                         this.getUserPost();
                     } else {
                         this.getAllPosts();
                     }
-
                     this.textComment = "";
                 })
                 .catch(err => console.log(err))
@@ -265,10 +258,7 @@ export default {
                     'authorization': `Bearer ${token}`
                 }
             })
-                .then(res => {
-                    console.log(res);
-                    this.comments = res.data
-                })
+                .then(res => this.comments = res.data)
                 .catch(err => console.log(err))
         },
 
@@ -288,7 +278,8 @@ export default {
                 .catch(() => console.log('Impossible de récupérer les posts !'))
         },
 
-        async getUserPost(){
+        // Récupération des posts d'un utilisateur
+        getUserPost(){
             const userId = this.$route.params.id;
             const token = sessionStorage.getItem('token');
             axios.get(`http://localhost:3000/api/posts/${userId}`, {
@@ -305,12 +296,8 @@ export default {
 
     },
     created(){
-        // this.getComments()
         this.checkLike()
     },
-    updated(){
-        // this.checkLike()
-    }
 }
 </script>
 

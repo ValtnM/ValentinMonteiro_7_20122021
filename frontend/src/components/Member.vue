@@ -60,8 +60,7 @@ export default {
       userId: '',
       profileId: '',
       userUpdated: {
-        email: '',
-        // password: '',
+        email: this.user.email,
         firstname: this.user.firstname,
         lastname: this.user.lastname,
         photo: null
@@ -89,6 +88,7 @@ export default {
       this.updateMode = !this.updateMode;
     },
 
+    // Récupération des infos saisies par l'utilisateur
     getUserInfo(){
       this.userUpdated.email = document.querySelector('#email').value;
       this.userUpdated.firstname = document.querySelector('#prenom').value;
@@ -104,7 +104,6 @@ export default {
       formData.append('firstname', this.userUpdated.firstname)
       formData.append('lastname', this.userUpdated.lastname)
       formData.append('email', this.userUpdated.email)
-      // formData.append('password', this.userUpdated.password)
       formData.append('image', this.userUpdated.photo)
       
       axios.put(`http://localhost:3000/api/users/profile/${this.userId}`, formData, {
@@ -120,20 +119,38 @@ export default {
             this.user.photo = res.data.photo
             this.updateMode = false;
             this.getUpdatePostsInfo(res.data)
-            this.$emit('update:posts', this.posts)
+            this.getUserPost();
           })
           .catch((err) => console.log(err))
     },
 
+    // Récupération des posts d'un utilisateur
+    getUserPost(){
+        const userId = this.$route.params.id;
+        const token = sessionStorage.getItem('token');
+        axios.get(`http://localhost:3000/api/posts/${userId}`, {
+            headers: {
+            'authorization': `Bearer ${token}`
+            }
+        }).then(res => {
+            this.$emit('update:posts', res.data)
+        }).catch(err => {
+            console.log(err);
+        })
+    },
+
+    // Mise à jour des informations User
     getUpdatePostsInfo(value){
       for(let i = 0; i < this.posts.length; i++){
         this.posts[i].User.id = value.id;
         this.posts[i].User.firstname = value.firstname;
         this.posts[i].User.lastname = value.lastname;
         this.posts[i].User.photo = value.photo;
+        this.posts[i].Comment
       }
     },
 
+    // Affichage de la fenêtre de confirmation de suppression de compte
     showConfirmation(){
       this.$emit('showConfirmation', true)
     }
@@ -142,7 +159,6 @@ export default {
   // Appel de la fonction lors de la création du composant
   created(){
     this.getId();
-    this.userUpdated.email = this.user.email
   },
 }
 </script>

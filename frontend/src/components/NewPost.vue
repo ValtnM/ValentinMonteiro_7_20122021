@@ -82,8 +82,7 @@ export default {
                             'authorization': `Bearer ${token}`,
                         }
                     })
-                        .then(res => {
-                            console.log(res);
+                        .then(() => {
                             this.textContent = "";
                             this.getAllPosts();
                         })
@@ -105,7 +104,6 @@ export default {
                         }
                     })
                         .then(() => {
-                            console.log('ok');
                             this.imageContent = null;
                             this.getAllPosts();
                         })
@@ -113,7 +111,8 @@ export default {
                 }
             }            
         },
-
+        
+        // Récupération de tous les posts
         getAllPosts(){
             const token = sessionStorage.getItem('token')
             if(!token) {
@@ -124,9 +123,7 @@ export default {
                    'authorization': `Bearer ${token}`
                }
            })
-            .then((res) => {
-                this.$emit('update:posts', res.data)
-            })
+            .then((res) => this.$emit('update:posts', res.data))
                 
             .catch(() => console.log('Impossible de récupérer les posts !'))
         },

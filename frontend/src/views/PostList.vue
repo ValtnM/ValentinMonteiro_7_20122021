@@ -59,8 +59,7 @@ export default {
                    'authorization': `Bearer ${token}`
                }
            })
-            .then((res) => this.posts = res.data)
-                
+            .then((res) => this.posts = res.data)                
             .catch(() => console.log('Impossible de récupérer les posts !'))
         },
 
@@ -111,7 +110,5 @@ export default {
             }
         }
     }
-
-
     
 </style>

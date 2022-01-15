@@ -141,30 +141,12 @@ exports.getUserPost = (req, res, next) => {
     });
 };
 
-// exports.addLike = (req, res, next) => {
-//     const headerAuth = req.headers['authorization'];
-//     const userId = jwtUtils.getUserId(headerAuth);
-//     const postId = req.params.id;
-//     console.log('body: ' + req.body.like);
-
-//     models.Post.findOne({ where: { id: postId } })
-//         .then(post => {
-//             console.log(post.dataValues);
-//             post.update({
-//                 like: req.body.like
-//             })
-//                 .then(() => res.status(200).json({ message: 'Données mises à jour !' }))
-//                 .catch((err) => res.status(500).json({ err }))
-//         })
-//         .catch(() => res.status(404).json({ error: 'Post introuvable !' }));
-// };
 
 
 // Mise à jour d'un post
 exports.updatePost = (req, res, next) => {
     const postId = req.params.id;
     const textContent = req.body.textContent;
-    // console.log('body: ' + req.body);
     let imageContent = req.file
 
     if(!textContent && !imageContent) {
@@ -209,7 +191,6 @@ exports.updatePost = (req, res, next) => {
 // Suppression d'un post
 exports.deletePost = (req, res, next) => {
     const postId = req.params.id;
-    console.log("postId: "+postId);
     
     models.Post.findOne({ where: { id: postId } })
         .then(post => {
@@ -223,7 +204,6 @@ exports.deletePost = (req, res, next) => {
                     };
                 })
             }
-            console.log(post);
             models.Post.destroy({ where: { id: postId } })
                 .then(() => res.status(200).json({ message: "Publication supprimée !" }))
                 .catch(() => res.status(500).json({ erreur: "Impossible de supprimer le post !" }))
