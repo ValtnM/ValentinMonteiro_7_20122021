@@ -225,7 +225,6 @@ export default {
         // Vérification des like du post
         checkLike(){
             const token = sessionStorage.getItem('token');
-            console.log(this.post.id);
 
             axios.get(`http://localhost:3000/api/posts/${this.post.id}/like`, {
                 headers: {

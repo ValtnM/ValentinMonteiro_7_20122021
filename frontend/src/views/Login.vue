@@ -12,7 +12,7 @@
                     </div>
                     <div class="form-group my-3">
                         <label for="password">Mot de passe</label>
-                        <input class="form-control" type="password" id="password" placeholder="Entrez votre mot de passe..." v-model="password">
+                        <input class="form-control" type="password" id="password" placeholder="Entrez votre mot de passe..."  autocomplete="off" v-model="password">
                     </div>
                     <div>Pas encore de compte ? <router-link class="nav-link sign-link" :to="{name: 'signup'}">S'inscrire</router-link></div>
                     <button class="btn btn-success my-3" @click.prevent="login">Se connecter</button>

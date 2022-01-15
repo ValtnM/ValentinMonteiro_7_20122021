@@ -20,23 +20,33 @@ exports.signup = (req, res, next) => {
     const password = req.body.password;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
+    console.log(req.file);
+    if(!req.file){
+        return res.json({ message: "Photo manquante" })
+    }
+    console.log(req.file.mimetype);
+    if(req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg" && req.file.mimetype != "image/png"){
+        return res.json({ message: "Fichier invalide (JPG, JPEG ou PNG seulement)"})
+    }
+    
     const photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
-    if(email == null || password == null || firstname == null || lastname == null) {
-        return res.status(400).json({ message: 'paramètres manquants' });
+    if(email == null || password == null || firstname == null || lastname == null || photo == null) {
+        return res.json({ message: 'Paramètre(s) manquant(s)' });
     } 
     if (firstname.length > 20 || firstname.length < 2) {
-        return res.status(400).json({ 'message': 'prénom invalide (doit être entre 2 et 20 caractères)' })
+        return res.json({ message: 'Prénom invalide (doit être entre 2 et 20 caractères)' })
     } 
     if (lastname.length > 20 || lastname.length < 2) {
-        return res.status(400).json({ 'erreur': 'nom invalide (doit être entre 2 et 20 caractères)' })
+        return res.json({ message: 'Nom invalide (doit être entre 2 et 20 caractères)' })
     } 
     if(!emailRegex.test(email)) {
-        return res.status(400).json({ 'erreur': 'email invalide' })
+        return res.json({ message: 'Email invalide' })
     } 
     if (!passwordRegex.test(password)) {
-        return res.status(400).json({ 'erreur': 'mot de passe invalide (doit contenir entre 8 et 15 caractères et au moins un chiffre)'})
+        return res.json({ message: 'Mot de passe invalide (doit contenir entre 8 et 15 caractères et au moins un chiffre)'})
     }
+    
 
     models.User.findOne({
         attributes: ['email'],
@@ -56,7 +66,8 @@ exports.signup = (req, res, next) => {
                         isAdmin: 0
                     })
                     .then((newUser) => {
-                        return res.status(201).json({ 'userId': newUser.id })
+                        // return res.status(201).json({ 'userId': newUser.id })
+                        return res.status(201).json({ message: 'success' })
                     })
                     .catch(() => {
                         return res.status(500).json({ erreur: "Impossible de créer un nouvel utilisateur" })
@@ -66,7 +77,7 @@ exports.signup = (req, res, next) => {
                 })
 
         } else {
-            return res.status(409).json({ erreur: "L'utilisateur existe déjà !" });
+            return res.json({ message: "Cette adresse email est déjà utilisée" });
         }
     })
     .catch(err => {

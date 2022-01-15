@@ -11,10 +11,10 @@
                 </div>
                 <router-link  class="nav-link" :to="{name: 'login'}"><button class="btn btn-success">Se connecter</button></router-link>
             </div>
-            <div class="alert alert-danger failure signup-message" role="alert" v-if="message === 'failure'">
+            <div class="alert alert-danger failure signup-message" role="alert" v-if="message !== 'success' && message != ''">
                 <div>
                     <i class="fas fa-exclamation-triangle"></i>
-                    Échec lors de la création du compte !
+                    Échec lors de la création du compte ! | {{message}}
                 </div>
             </div>
 
@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Mot de passe</label>
-                                    <input class="form-control" type="password" id="password" placeholder="Entrez un mot de passe..." v-model="userInfos.password">
+                                    <input class="form-control" type="password" id="password" placeholder="Entrez un mot de passe..."  autocomplete="off" v-model="userInfos.password">
                                 </div>
                                 <div class="form-group">
                                     <label for="prenom">Prénom</label>
@@ -104,8 +104,11 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-                .then(() => this.signupMessage('success'))
-                .catch(() => this.signupMessage('failure'))
+                .then((res) => {
+                    this.message = "";
+                    this.signupMessage(res.data.message);
+                })
+                .catch((err) =>  console.log(err))
         }
     }
 }
