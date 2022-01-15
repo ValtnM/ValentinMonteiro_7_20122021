@@ -17,20 +17,25 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       });
 
-      models.Post.belongsToMany(models.User, {
-        onDelete: 'CASCADE',
-        through: models.Like,
-        foreignKey: 'postId',
-        otherKey: 'userId'
-      });
+    //   models.Post.belongsToMany(models.User, {
+    //     onDelete: 'CASCADE',
+    //     through: models.Like,
+    //     foreignKey: 'postId',
+    //     otherKey: 'userId'
+    //   });
 
-      models.Post.belongsToMany(models.User, {
-        onDelete: 'CASCADE',
-        through: models.Comment,
-        foreignKey: 'postId',
-        otherKey: 'userId',
-        // hooks: true
-    });
+    //   models.Post.belongsTo(models.User, {
+    //     onDelete: 'CASCADE',
+    //     through: models.Comment,
+    //     foreignKey: 'postId',
+    //     otherKey: 'userId',
+    // });
+    models.Post.hasMany(models.Comment, {
+      onDelete: 'CASCADE',      
+    })
+    models.Post.hasMany(models.Like, {
+      onDelete: 'CASCADE',      
+    })
     }
   };
   Post.init({

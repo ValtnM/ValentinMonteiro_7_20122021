@@ -5,7 +5,6 @@
         <div class="container-fluid p-4" >
             <div class="row">          
                 <div class="col-lg-9 post-card">
-                    <comment></comment>
                     <new-post :posts.sync="posts"></new-post>
                     <post v-for="(post, index) in posts" :key="index" :post="post" :user="user" :posts.sync="posts" :isAdmin="user.isAdmin">{{post}}</post>
                 </div>
@@ -24,7 +23,6 @@ import NavbarUser from '../components/NavbarUser.vue'
 import Member from '../components/Member.vue'
 import Post from '../components/Post.vue'
 import NewPost from '../components/NewPost.vue'
-import Comment from '../components/Comment.vue'
 
 
 export default {
@@ -47,7 +45,6 @@ export default {
         "member": Member,
         "post": Post,
         "new-post": NewPost,
-        "comment": Comment
     },
     methods: {
 

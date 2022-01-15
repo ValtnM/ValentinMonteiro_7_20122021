@@ -31,7 +31,11 @@ exports.createComment = (req, res , next) => {
     models.Comment.create({
         userId: userId,
         postId: postId,
-        text: text
+        text: text,
+        include: [{
+            model: models.User,
+            // attributes: ['id','firstname', 'lastname', 'photo']
+        }]
     })
         .then(comment => res.status(201).json(comment))
         .catch(() => res.status(500).json({ error: "Impossible de créer le commentaire !" }))

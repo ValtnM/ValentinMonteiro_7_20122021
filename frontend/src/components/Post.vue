@@ -56,7 +56,7 @@
                     </div>
                     <button class="btn btn-primary" @click.prevent="createComment">Publier</button>
                 </form>
-                <comment class="comment-card" v-for="(comment, index) in comments" :key="index" :comment="comment" :comments.sync="comments" :user="user" :isAdmin="isAdmin"></comment>
+                <comment class="comment-card" v-for="(comment, index) in post.Comments" :key="index" :comment="comment" :comments.sync="comments" :user="user" :isAdmin="isAdmin" :getAllPosts="getAllPosts" :getUserPost="getUserPost"></comment>
             </div>
         </div>
         <div class="post-button" v-if="user.id == this.post.userId || user.isAdmin">
@@ -68,6 +68,8 @@
 
 <script>
 import axios from 'axios'
+
+// import {bus} from '../main'
 
 import Bubble from './Bubble.vue'
 import Comment from './Comment.vue'
@@ -84,28 +86,18 @@ export default {
             imageContent: null,
             alreadyLiked: false,
             textComment: "",
-            comments: [
-                // {
-                //     User: {
-                //        firsname: "",
-                //        id: null,
-                //        lastname: "",
-                //        photo: ""
-                //     },
-                //     createdAt: "",
-                //     id: null,
-                //     postId: null,
-                //     text: "",
-                //     updatedAt: "",
-                //     userId: null
-                // }
-            ]
+            comments: []
         }
     },
     props: ['post', 'user', 'posts', 'isAdmin'],
     components: {
         'bubble': Bubble,
         'comment': Comment
+    },
+    watch: {
+        posts(){
+            this.checkLike();
+        }
     },
     methods: {
 
@@ -185,7 +177,11 @@ export default {
                     'authorization': `Bearer ${token}`
                 }
             })
-                .then(() => this.deleteToPostList())
+                .then(() => {
+                    this.deleteToPostList()
+                    this.checkLike()
+                })
+                    
                 .catch(err => console.log(err))
         },
 
@@ -193,6 +189,7 @@ export default {
         deleteToPostList(){
             this.selectPostToDelete()
             this.$emit('update:posts', this.posts)
+            // this.checkLike();
         },
 
         // Suppression du post de la props 'posts'
@@ -223,13 +220,16 @@ export default {
         // Vérification des like du post
         checkLike(){
             const token = sessionStorage.getItem('token');
+            console.log(this.post.id);
 
             axios.get(`http://localhost:3000/api/posts/${this.post.id}/like`, {
                 headers: {
                     'authorization': `Bearer ${token}`
                 }
             })
-                .then(res => this.alreadyLiked = res.data.message)
+                .then(res => {
+                    this.alreadyLiked = res.data.message
+                })
                 .catch(err => console.log(err))
         },
 
@@ -244,13 +244,17 @@ export default {
                 }
             })
                 .then(res => {
-                    this.comments.push(res.data);
-                    this.getComments();
+                    console.log(res);
+                    if(this.$route.params.id){
+                        this.getUserPost();
+                    } else {
+                        this.getAllPosts();
+                    }
+
                     this.textComment = "";
                 })
                 .catch(err => console.log(err))
         },
-
 
         // Récupération des commentaires
         getComments(){
@@ -284,10 +288,28 @@ export default {
                 .catch(() => console.log('Impossible de récupérer les posts !'))
         },
 
+        async getUserPost(){
+            const userId = this.$route.params.id;
+            const token = sessionStorage.getItem('token');
+            axios.get(`http://localhost:3000/api/posts/${userId}`, {
+                headers: {
+                'authorization': `Bearer ${token}`
+                }
+            }).then(res => {
+                this.$emit('update:posts', res.data)
+                this.checkLike()
+            }).catch(err => {
+                console.log(err);
+            })
+        },
+
     },
     created(){
-        this.getComments()
+        // this.getComments()
         this.checkLike()
+    },
+    updated(){
+        // this.checkLike()
     }
 }
 </script>

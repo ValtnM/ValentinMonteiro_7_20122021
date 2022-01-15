@@ -28,7 +28,7 @@ export default {
             
         }
     },
-    props: ['comment','comments', 'user', "isAdmin"],
+    props: ['comment','comments', 'user', "isAdmin", "getAllPosts", "getUserPost"],
     components: {
         "bubble": Bubble
     },
@@ -57,7 +57,13 @@ export default {
         // Mise à jour de la variable 'comments' dans l'élément parent
         deleteToCommentList(){
             this.selectCommentToDelete()
-            this.$emit('update:comments', this.comments)
+            // bus.$emit('updatePosts', )
+            if(this.$route.params.id) {
+                this.getUserPost()
+            } else {
+                this.getAllPosts()                
+            }
+            // this.$emit('update:comments', this.comments)
         },
 
         // Suppression du post de la props 'comments'

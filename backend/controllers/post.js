@@ -43,7 +43,7 @@ exports.createPost = (req, res, next) => {
                 dislike: 0,
                 userId: user.dataValues.id
             })
-                .then((res) => console.log(res))
+                .then(() => res.status(201).json({"message": "Nouveau post créé avec succès !"}))
                 .catch(err => console.log(err)) 
             // res.status(201).json({"message": "Nouveau post créé avec succès !"})
                     
@@ -68,13 +68,24 @@ exports.getAllPost = (req, res, next) => {
         attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
         limit: (!isNaN(limit)) ? limit : null,
         offset: (!isNaN(offset)) ? offset : null,
-        include: [{
-            model: models.User,
-            attributes: ['id','firstname', 'lastname', 'photo']
-        }]
+        include: [
+            {
+                model: models.User,
+            },
+            {
+                model: models.Comment,
+                include: [{
+                    model: models.User
+                }]
+            },
+            {
+                model: models.Like
+            },
+        ]
 
         
     }).then(posts => {
+        console.log(posts);
         if(posts){
             res.status(200).json(posts);
         } else {
@@ -96,16 +107,28 @@ exports.getUserPost = (req, res, next) => {
     const offset = parseInt(req.query.offset);
     const order = req.query.order;
 
+
+
     models.Post.findAll({
         where: {userId: userId},
         order: [(order != null) ? order.split(':') : ['id', 'DESC']],
         attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
         limit: (!isNaN(limit)) ? limit : null,
         offset: (!isNaN(offset)) ? offset : null,
-        include: [{
-            model: models.User,
-            attributes: ['id','firstname', 'lastname', 'photo']
-        }]
+        include: [
+            {
+                model: models.User,
+            },
+            {
+                model: models.Comment,
+                include: [{
+                    model: models.User
+                }]
+            },
+            {
+                model: models.Like
+            }
+        ]
     }).then(posts => {
         if(posts){
             res.status(200).json(posts);

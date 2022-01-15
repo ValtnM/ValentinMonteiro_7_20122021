@@ -11,7 +11,6 @@ exports.likePost = (req, res, next) => {
     const userId = jwtUtils.getUserId(headerAuth);
     const postId = parseInt(req.params.postId);
 
-
     if(postId <= 0){
         res.status(400).json({ error: 'Paramètres invalides !' })
     }

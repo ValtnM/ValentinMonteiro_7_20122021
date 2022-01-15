@@ -13,19 +13,28 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.User.hasMany(models.Post);
 
-      models.User.belongsToMany(models.Post, {
-        onDelete: 'CASCADE',
-        through: models.Like,
-        foreignKey: 'userId',
-        otherKey: 'postId'
-      });
+      // models.User.belongsToMany(models.Post, {
+      //   onDelete: 'CASCADE',
+      //   through: models.Like,
+      //   foreignKey: 'userId',
+      //   otherKey: 'postId'
+      // });
 
-      models.User.belongsToMany(models.Post, {
+      // models.User.belongsToMany(models.Post, {
+      //   onDelete: 'CASCADE',
+      //   through: models.Comment,
+      //   foreignKey: 'userId',
+      //   otherKey: 'postId'
+      // });
+
+      models.User.hasMany(models.Comment, {
         onDelete: 'CASCADE',
-        through: models.Comment,
-        foreignKey: 'userId',
-        otherKey: 'postId'
-      });
+        foreignKey: 'userId'
+      })
+      models.User.hasMany(models.Like, {
+        onDelete: 'CASCADE',
+        foreignKey: 'userId'
+      })
     }
   };
   User.init({
