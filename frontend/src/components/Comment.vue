@@ -5,12 +5,14 @@
             <bubble class="user-photo" :photo="comment.User.photo" :userId="comment.User.id"></bubble>
             <div class="comment-header__informations">
                 <div class="comment-header__informations__user">
-                    <h5>{{comment.User.firstname}} {{ comment.User.lastname }}</h5>
+                    <router-link :to="{name: 'profile', params: { id: comment.userId }}"><h5>{{comment.User.firstname}} {{ comment.User.lastname }}</h5></router-link>
+                    <!-- <h5>{{comment.User.firstname}} {{ comment.User.lastname }}</h5> -->
                     <p>Publié le {{ getDate(comment.createdAt) }}</p>
                 </div>
                 <p>{{ comment.text }}</p>
             </div>
-            <button class="btn btn-danger delete-button" v-if="user.id == comment.User.id || isAdmin" @click.prevent="deleteComment">Supprimer</button>
+            <button class="btn btn-danger delete-button-large" v-if="user.id == comment.User.id || isAdmin" @click.prevent="deleteComment">Supprimer</button>
+            <button class="btn btn-danger delete-button-small" v-if="user.id == comment.User.id || isAdmin" @click.prevent="deleteComment"><i class="fas fa-trash-alt"></i></button>
         </div>
       </div>
   </div>
@@ -102,6 +104,11 @@ export default {
                 justify-content: space-between;
             }
 
+            a {
+                color: black;
+                text-decoration: none;
+            }
+
             h5 {
                 font-size: 1.1em;
             }
@@ -114,9 +121,57 @@ export default {
     }
 
     .delete-button{
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        font-size: 0.7em;
+        &-large {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7em;
+        }
+
+        &-small {
+            display: none;
+            position: absolute;
+        }
+    }
+
+    @media screen and (max-width: 550px) {
+        .comment-header {
+            .user-photo {
+                display: none;
+                width: 50px;
+                height: 50px;
+            }
+
+            .comment-header__informations {
+                margin-left: 0;
+                
+                p {
+                    font-size: 0.7em;
+                }
+                &__user {                   
+                    h5 {
+                        font-size: 0.8em;
+                    }
+                    p {
+                        font-size: 0.6em;
+                        display: none;
+                    }
+                }
+            }
+
+            .delete-button {
+                &-large {
+                    display: none;
+                }
+
+                &-small {
+                    display: inline-block;
+                    bottom: 5px;
+                    right: 5px;
+                    padding: 2px 4px;
+                    font-size: 0.7em;
+                }
+            }
+        }
     }
 </style>

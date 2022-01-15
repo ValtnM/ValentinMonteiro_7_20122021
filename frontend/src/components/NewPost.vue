@@ -154,5 +154,6 @@ export default {
     .form-group {
         margin-bottom: 15px;
     }
-    
+
+        
 </style>

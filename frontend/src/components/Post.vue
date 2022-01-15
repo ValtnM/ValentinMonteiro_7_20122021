@@ -43,10 +43,20 @@
             <img :src="post.imageContent" v-if="post.imageContent">
         </div>
         <div class="post-footer">
-            <div class="post-footer__like">
-                <button class="btn btn-primary" :class="{ liked: alreadyLiked }" @click.prevent="addLike">
-                    <div><i class="fas fa-thumbs-up like"></i>{{ post.like }}</div>
-                </button>
+            <div class="post-footer__button">
+                <div class="post-footer__like">
+                    <button class="btn btn-primary" :class="{ liked: alreadyLiked }" @click.prevent="addLike">
+                        <div class="like-icon"><i class="fas fa-thumbs-up like"></i>{{ post.like }}</div>
+                    </button>
+                </div>
+                <div class="post-button-small" v-if="user.id == this.post.userId || user.isAdmin">
+                    <button class="btn btn-primary" @click="updateMode = true"><i class="fas fa-pen"></i></button>
+                    <button class="btn btn-danger" @click="deletePost"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                <div class="post-button-large" v-if="user.id == this.post.userId || user.isAdmin">
+                    <button class="btn btn-primary" @click="updateMode = true">Modifier</button>
+                    <button class="btn btn-danger" @click="deletePost">Supprimer</button>
+                </div>
             </div>
             <div class="post-footer__comment">
                 <h5>Commentaires :</h5>
@@ -59,10 +69,8 @@
                 <comment class="comment-card" v-for="(comment, index) in post.Comments" :key="index" :comment="comment" :comments.sync="comments" :user="user" :isAdmin="isAdmin" :getAllPosts="getAllPosts" :getUserPost="getUserPost"></comment>
             </div>
         </div>
-        <div class="post-button" v-if="user.id == this.post.userId || user.isAdmin">
-            <button class="btn btn-primary" @click="updateMode = true">Modifier</button>
-            <button class="btn btn-danger" @click="deletePost">Supprimer</button>
-        </div>
+        
+      
     </div>    
 </template>
 
@@ -311,7 +319,6 @@ export default {
 <style lang="scss" scoped>
     .card {
         background: #fff;
-        // background: #FCFFF4;
         
         margin: 50px auto 0 auto;        
 
@@ -332,7 +339,6 @@ export default {
         .post {
 
             &-header {
-                // background: #FFE9E9;
                 background: #fff;
                 border-bottom: none;
             }
@@ -397,7 +403,7 @@ export default {
 
                     border-top: thick double rgba(0,0,0,.125);
                     margin-top: 10px;
-                    padding: 10px;
+                    padding: 10px 0 0 0;
 
                     form {
                         display: flex;
@@ -418,18 +424,115 @@ export default {
             }
 
             &-button {
-                position: absolute;
-                top: 20px;
-                right: 20px;
+                &-large {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+    
+                    .btn {
+                        margin-left: 10px;
+                    }
+                }
 
-                .btn {
-                    margin-left: 10px;
+                &-small {
+                    display: none;
+                    position: absolute;
                 }
             }
+            
         }
 
 
     }
 
+    @media screen and (max-width: 770px) {
+        .post {
+            
+            &-footer {
+                &__button {
+                    display: flex;
+                    justify-content: space-between;
 
+                }
+            }
+            &-button {
+                &-large {
+                    display: none;
+                    position: absolute;
+                }                
+
+                &-small {
+                    display: inline-block!important;
+                    position: static!important;
+                    top: 10px;
+                    right: 10px;
+    
+                    .btn {
+                        margin-left: 10px;
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                    }
+                    i{
+                        margin-right: 0!important;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 550px){
+        .card {
+            .member-photo {
+                width: 50px;
+                height: 50px;
+                margin-right: 25px;
+                a {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .post {
+                &-author {
+                    font-size: 0.9em;
+                }
+
+                &-date {
+                    font-size: 0.7em;
+                }
+
+                &-body {
+                h3 {
+                    font-size: 1.1em!important;
+                }
+            }
+                &-footer {
+                    &__like{
+                        width: 50px;
+                        font-size: 0.7em;
+                        .like-icon {
+                            display: flex;
+                            font-size: 0.7em;
+                        }
+                        
+                    }
+
+                    &__comment {
+                        h5 {
+                            font-size: 0.7em;
+                        }
+                        .form-group, button {
+                            margin: 5px;
+                            font-size: 0.7em;
+
+                        }
+                        textarea{
+                            font-size: 0.8em;
+                        }
+                    }
+                }
+            }
+        }
+    }
 </style>

@@ -133,40 +133,9 @@ export default {
     }
   }
 
-  // .card {
-  //   margin: 0 auto 50px auto;    
-  //   &-body {
-  //     padding-top: 175px;
-  //   }
-  // }
-
-  // .user {
-  //   &-photo {
-  //     position: relative;
-  //     top: 150px;
-  //     z-index: 1;
-  //     margin: auto;
-  //     width: 300px;
-  //     height: 300px;
-  //   }
-  // }
-  // .email {
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  //   i {
-  //     font-size: 1.4em;
-  //   }
-  //   h3 {
-  //     margin: auto 0 auto 10px;
-  //   }
-  // }
-  // .modify-user {
-  //   display: flex;
-  //   flex-direction: column;
-  //   margin-top: 20px;
-  //   .btn {
-  //     margin-top: 15px;
-  //   }
-  // }
+  @media screen and (max-width: 770px) {
+    // .profile-container {
+    //   padding: 10px;
+    // }
+  }
 </style>

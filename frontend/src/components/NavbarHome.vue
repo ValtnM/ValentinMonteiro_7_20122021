@@ -1,9 +1,8 @@
 <template>
-  <div>
+  <div class="navbar-container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger px-5 py-3">
       <router-link  class="nav-link" :to="{name: 'home'}"><img src="../../public/img/icons/icon-left-font-monochrome-white.svg" alt="Logo groupomania"></router-link>
-      <!-- <a href="#" class="navbar-brand"><img src="../../public/img/icons/icon-left-font-monochrome-white.svg" alt="Logo groupomania"></a> -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler nav-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
@@ -26,6 +25,31 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 
+
+  @media screen and (max-width: 700px) {
+    .nav-link {
+      width: 80%;
+    }
+    .nav-btn {
+      width: 30px;
+      padding: 0.1rem !important;
+      span {
+        width: 100%;
+      }
+    }
+    
+  }
+
+  @media screen and (max-width: 350px) {
+    .nav-link {
+      width: 175px;
+      font-size: 0.8em;
+    }
+    .nav-btn {
+      width: 20px;
+    }
+  }
+  
 </style>

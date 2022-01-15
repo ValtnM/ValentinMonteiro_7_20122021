@@ -20,11 +20,10 @@ exports.signup = (req, res, next) => {
     const password = req.body.password;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
-    console.log(req.file);
+
     if(!req.file){
         return res.json({ message: "Photo manquante" })
     }
-    console.log(req.file.mimetype);
     if(req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg" && req.file.mimetype != "image/png"){
         return res.json({ message: "Fichier invalide (JPG, JPEG ou PNG seulement)"})
     }
@@ -66,7 +65,6 @@ exports.signup = (req, res, next) => {
                         isAdmin: 0
                     })
                     .then((newUser) => {
-                        // return res.status(201).json({ 'userId': newUser.id })
                         return res.status(201).json({ message: 'success' })
                     })
                     .catch(() => {

@@ -177,7 +177,6 @@ export default {
   .member {
     &-card {
         max-width: 800px;
-        // height: 800px;
         margin: auto;
     }
     &-photo {
@@ -185,7 +184,7 @@ export default {
       top: -20px;
       z-index: 1;
       margin: auto;
-      width: 300px;
+      max-width: 300px;
       height: 300px;
       clip-path: circle();
     }
@@ -214,5 +213,18 @@ export default {
     }
   }
 
+  @media screen and (max-width: 770px){
+    .member {
+      &-card {
+        margin: 10px;
+      }
+      &-photo {
+        width: 250px;
+      }
+    }
+     .email {
+       font-size: 0.8em;
+     }
+  }
   
 </style>

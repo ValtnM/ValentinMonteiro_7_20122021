@@ -14,7 +14,7 @@
                         <label for="password">Mot de passe</label>
                         <input class="form-control" type="password" id="password" placeholder="Entrez votre mot de passe..."  autocomplete="off" v-model="password">
                     </div>
-                    <div>Pas encore de compte ? <router-link class="nav-link sign-link" :to="{name: 'signup'}">S'inscrire</router-link></div>
+                    <div class="signup-link">Pas encore de compte ? <router-link class="nav-link sign-link" :to="{name: 'signup'}">S'inscrire</router-link></div>
                     <button class="btn btn-success my-3" @click.prevent="login">Se connecter</button>
                 </form>
                 <div class="alert alert-danger" v-if="loginFailure">
@@ -95,6 +95,27 @@ export default {
     @media screen and (max-width: 550px) {
         .card {
             width: 90%;
+        }
+
+        form {
+            .form-group {
+                label, input {
+                    font-size: 0.7em;
+                }
+                margin: 10px 0;
+            }
+            .signup-link {
+                font-size: 0.7em;
+            }
+            button {
+                width: 100%;
+            }
+        }
+        .alert-danger {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.7em;
+            text-align: center;
         }
     }
 </style>

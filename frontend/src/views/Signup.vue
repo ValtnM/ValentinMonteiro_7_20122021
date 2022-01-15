@@ -4,18 +4,20 @@
 
         <div class="p-3">
 
-            <div class="alert alert-success signup-message" role="alert" v-if="message === 'success'">
-                <div>
+            <div class="alert alert-success signup-message" role="alert" v-if="message == 'success'">
+               
                     <i class="fas fa-check"></i>
-                    Votre compte a été créé avec succès !
-                </div>
-                <router-link  class="nav-link" :to="{name: 'login'}"><button class="btn btn-success">Se connecter</button></router-link>
+                    <div>
+                        Votre compte a été créé avec succès !
+                    </div>
+                    <router-link  class="nav-link" :to="{name: 'login'}"><button class="btn btn-success">Se connecter</button></router-link>
+                    
             </div>
             <div class="alert alert-danger failure signup-message" role="alert" v-if="message !== 'success' && message != ''">
-                <div>
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Échec lors de la création du compte ! | {{message}}
-                </div>
+                
+                <i class="fas fa-exclamation-triangle"></i>
+                Échec lors de la création du compte ! | {{message}}
+                
             </div>
 
             <div class="card signup-card">
@@ -128,7 +130,6 @@ export default {
             margin: auto;
             display: flex;
             align-items: center;
-            justify-content: space-between;
 
             i {
                 font-size: 1.4em;
@@ -137,7 +138,6 @@ export default {
         }
 
         &-img{
-            // width: 100%;
             margin: auto;
         }
 
@@ -156,9 +156,44 @@ export default {
         }
     }
 
-    @media screen and (max-width: 550px) {
-        .card {
-            width: 90%;
+    @media screen and (max-width: 770px) {
+        .signup {
+            &-img {
+                display: block;
+                width: 50%;
+                text-align: center;
+            }
+            &-message {
+                .btn-success {
+                    font-size: 0.9em;
+                }
+            }
         }
     }
+    @media screen and (max-width: 550px) {
+        .signup {
+            &-card {
+                width: 100%;
+            }
+
+            &-message {
+                flex-direction: column;
+                font-size: 0.7em;
+                text-align: center;
+            }
+        }
+
+        form {
+        .form-group {
+            label, input {
+                font-size: 0.7em;
+            }
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+        }
+    }
+    }
+
 </style>

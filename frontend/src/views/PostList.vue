@@ -2,7 +2,7 @@
     <div>
         <navbar-user></navbar-user>
         
-        <div class="container-fluid p-4" >
+        <div class="container-fluid p-sm-4 p-2" >
             <div class="row">          
                 <div class="col-lg-9 post-card">
                     <new-post :posts.sync="posts"></new-post>
@@ -98,6 +98,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 
     .user-card{
         .email {
