@@ -192,6 +192,7 @@ export default {
                 }
             })
                 .then(() => {
+                    this.updateMode = false
                     this.deleteToPostList()
                     this.checkLike()
                 })

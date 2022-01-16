@@ -20,29 +20,69 @@ exports.signup = (req, res, next) => {
     const password = req.body.password;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
+    const photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
     if(!req.file){
         return res.json({ message: "Photo manquante" })
     }
     if(req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg" && req.file.mimetype != "image/png"){
+        let photoName = photo.split('/images/')[1];
+        fs.unlink(`images/${photoName}`, (error) => {
+            if(error){
+                console.log("Echec de suppression de l'image : " + error);
+            } else {
+                console.log("Image supprimée avec succès !");
+            };
+        });
         return res.json({ message: "Fichier invalide (JPG, JPEG ou PNG seulement)"})
     }
     
-    const photo = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
     if(email == null || password == null || firstname == null || lastname == null || photo == null) {
         return res.json({ message: 'Paramètre(s) manquant(s)' });
     } 
     if (firstname.length > 20 || firstname.length < 2) {
+        let photoName = photo.split('/images/')[1];
+        fs.unlink(`images/${photoName}`, (error) => {
+            if(error){
+                console.log("Echec de suppression de l'image : " + error);
+            } else {
+                console.log("Image supprimée avec succès !");
+            };
+        });
         return res.json({ message: 'Prénom invalide (doit être entre 2 et 20 caractères)' })
     } 
     if (lastname.length > 20 || lastname.length < 2) {
+        let photoName = photo.split('/images/')[1];
+        fs.unlink(`images/${photoName}`, (error) => {
+            if(error){
+                console.log("Echec de suppression de l'image : " + error);
+            } else {
+                console.log("Image supprimée avec succès !");
+            };
+        });
         return res.json({ message: 'Nom invalide (doit être entre 2 et 20 caractères)' })
     } 
     if(!emailRegex.test(email)) {
+        let photoName = photo.split('/images/')[1];
+        fs.unlink(`images/${photoName}`, (error) => {
+            if(error){
+                console.log("Echec de suppression de l'image : " + error);
+            } else {
+                console.log("Image supprimée avec succès !");
+            };
+        });
         return res.json({ message: 'Email invalide' })
     } 
     if (!passwordRegex.test(password)) {
+        let photoName = photo.split('/images/')[1];
+        fs.unlink(`images/${photoName}`, (error) => {
+            if(error){
+                console.log("Echec de suppression de l'image : " + error);
+            } else {
+                console.log("Image supprimée avec succès !");
+            };
+        });
         return res.json({ message: 'Mot de passe invalide (doit contenir entre 8 et 15 caractères et au moins un chiffre)'})
     }
     
@@ -150,6 +190,28 @@ exports.updateUser = (req, res, next) => {
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
     const photo = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+
+    if(photo && req.file.mimetype != "image/jpg" && req.file.mimetype != "image/jpeg" && req.file.mimetype != "image/png"){
+        let photoName = photo.split('/images/')[1];
+        fs.unlink(`images/${photoName}`, (error) => {
+            if(error){
+                console.log("Echec de suppression de l'image : " + error);
+            } else {
+                console.log("Image supprimée avec succès !");
+            };
+        });
+        return res.status(400).json({ message: "Fichier invalide (JPG, JPEG ou PNG seulement)"})
+    }
+    
+    if (firstname && (firstname.length > 20 || firstname.length < 2)) {
+        return res.status(400).json({ message: 'Prénom invalide (doit être entre 2 et 20 caractères)' })
+    } 
+    if (lastname && (lastname.length > 20 || lastname.length < 2)) {
+        return res.status(400).json({ message: 'Nom invalide (doit être entre 2 et 20 caractères)' })
+    } 
+    if(email && !emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Email invalide' })
+    } 
    
     // Recherche des informations de l'utilisateur dans la BDD
     models.User.findOne({
