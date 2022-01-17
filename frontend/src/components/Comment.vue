@@ -111,6 +111,7 @@ export default {
 
             h5 {
                 font-size: 1.1em;
+                color: black!important;
             }
 
             p {
