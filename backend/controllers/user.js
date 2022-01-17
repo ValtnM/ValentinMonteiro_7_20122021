@@ -183,8 +183,7 @@ exports.getOneUser = (req, res, next) => {
 
 // Mise à jour des données d'un utilisateur
 exports.updateUser = (req, res, next) => {
-    const headerAuth = req.headers['authorization'];
-    const userId = jwtUtils.getUserId(headerAuth);
+    const userId = req.params.id;
 
     const email = req.body.email
     const firstname = req.body.firstname;
@@ -220,7 +219,6 @@ exports.updateUser = (req, res, next) => {
     })
         .then(user => {
             if(user) {
-
                 // Suppression de l'ancienne photo
                 if(photo != null) {
                     const photoName = user.photo.split('/images/')[1];
@@ -232,7 +230,7 @@ exports.updateUser = (req, res, next) => {
                         };
                     });
                 };
-
+                
                 // Mise à jour du profil avec les nouvelles informations
                 user.update({
                     email: (email ? email : user.email),
@@ -260,6 +258,8 @@ exports.updateUser = (req, res, next) => {
     
 }
 
+
+// Suppression d'un utilisateur
 exports.deleteUser = (req, res, next) => {
 
     // Récupération de l'ID de l'utilisateur dans le token

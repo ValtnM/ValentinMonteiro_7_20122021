@@ -40,7 +40,7 @@
         </div>
         <div class="card-body post-body">
             <h3 class="fs-3" v-if="post.textContent">{{ post.textContent }}</h3>
-            <img :src="post.imageContent" v-if="post.imageContent">
+            <img :src="post.imageContent" :alt="altText" v-if="post.imageContent">
         </div>
         <div class="post-footer">
             <div class="post-footer__button">
@@ -103,6 +103,11 @@ export default {
     watch: {
         posts(){
             this.checkLike();
+        }
+    },
+    computed: {
+        altText(){
+            return `Image publiée par ${this.post.User.firstname}`
         }
     },
     methods: {

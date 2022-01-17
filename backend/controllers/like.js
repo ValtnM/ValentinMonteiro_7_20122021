@@ -55,37 +55,6 @@ exports.likePost = (req, res, next) => {
             }
         })
         .catch(() => res.status(500).json({ error: "Like non trouvé !" }))
-    
-
-    // if(postId <= 0){
-    //     res.status(400).json({ error: 'Paramètres invalides !' })
-    // }
-
-    // models.Post.findOne({ where: { id: postId }})
-    //     .then(post => {
-    //         if(post){
-    //             models.User.findOne({ where: { id: userId } })
-    //                 .then(user => {
-    //                     if(user){
-    //                         models.Like.create({                               
-    //                             userId: userId,
-    //                             postId: postId                                
-    //                         })
-    //                             .then((like) => {
-    //                                 res.status(200).json(like);
-    //                             })
-    //                             .catch(() => res.status(500).json({ error: "Impossible d'ajouter le like !" }))
-    //                     } else {
-    //                         res.status(404).json({ error: "Utilisateur inexistant !" })
-    //                     }
-    //                 })
-    //                 .catch(() => res.status(500).json({ error: 'Utilisateur introuvable !' }))
-    //         } else {
-    //             res.status(404).json({ error: 'Post déjà liké !' })
-    //         }
-    //     })
-    //     .catch(() => res.status(500).json({ error: 'Post introuvable !' }))
-
 }
 
 

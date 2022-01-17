@@ -4,7 +4,7 @@ const jwtUtils = require('../utils/jwt.utils.js');
 // Importation des models
 const models = require('../models');
 
-
+// Récupération des commentaires d'un post
 exports.getAllComments = (req, res, next) => {
     const postId = req.params.postId;
     // console.log(postId);
@@ -22,23 +22,30 @@ exports.getAllComments = (req, res, next) => {
         .catch(() => res.status(400).json({ error: "Commentaire non trouvé !" }))
 }
 
+
+// Création d'un commentaire
 exports.createComment = (req, res , next) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
     const postId = req.params.postId;
     const text = req.body.text;
 
-    models.Comment.create({
-        userId: userId,
-        postId: postId,
-        text: text,
-        include: [{
-            model: models.User,
-            // attributes: ['id','firstname', 'lastname', 'photo']
-        }]
-    })
-        .then(comment => res.status(201).json(comment))
-        .catch(() => res.status(500).json({ error: "Impossible de créer le commentaire !" }))
+    if(!text) {
+        res.status(400).json({ message: "Champs vide" })
+    } else {
+        models.Comment.create({
+            userId: userId,
+            postId: postId,
+            text: text,
+            include: [{
+                model: models.User,
+                // attributes: ['id','firstname', 'lastname', 'photo']
+            }]
+        })
+            .then(comment => res.status(201).json(comment))
+            .catch(() => res.status(500).json({ error: "Impossible de créer le commentaire !" }))
+    }
+
 
 }
 

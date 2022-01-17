@@ -85,7 +85,6 @@ exports.getAllPost = (req, res, next) => {
 
         
     }).then(posts => {
-        console.log(posts);
         if(posts){
             res.status(200).json(posts);
         } else {

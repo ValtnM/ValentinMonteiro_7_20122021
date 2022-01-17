@@ -106,7 +106,7 @@ export default {
       formData.append('email', this.userUpdated.email)
       formData.append('image', this.userUpdated.photo)
       
-      axios.put(`http://localhost:3000/api/users/profile/${this.userId}`, formData, {
+      axios.put(`http://localhost:3000/api/users/profile/${this.profileId}`, formData, {
           headers: {
             'authorization': `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
